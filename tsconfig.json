@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"lib": ["es2024"],
+		"types": [],
+		"verbatimModuleSyntax": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"noEmit": true,
+		"noImplicitOverride": true,
+		"noUncheckedIndexedAccess": true,
+		"noUncheckedSideEffectImports": true,
+		"skipLibCheck": true
+	},
+	"include": ["src/**/*"]
+}
