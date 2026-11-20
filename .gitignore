@@ -1,6 +1,6 @@
 node_modules/
 
-bp/scripts
+packs/bp/scripts
 *.mcaddon
 *.mcpack
 
