@@ -4,17 +4,17 @@ type PlayerState = {
 	slasher: {};
 };
 
-const playerStates = new Map<mc.Player, PlayerState>();
+const playerStates = new Map<string, PlayerState>();
 
 export function getOrCreatePlayerState(player: mc.Player): PlayerState {
-	const current = playerStates.get(player);
+	const current = playerStates.get(player.id);
 	if (current) return current;
 
 	const state: PlayerState = {
 		slasher: {},
 	};
 
-	playerStates.set(player, state);
+	playerStates.set(player.id, state);
 	return state;
 }
 
@@ -27,5 +27,5 @@ mc.world.afterEvents.playerSpawn.subscribe((ev) => {
 });
 
 mc.world.beforeEvents.playerLeave.subscribe((ev) => {
-	playerStates.delete(ev.player);
+	playerStates.delete(ev.player.id);
 });
