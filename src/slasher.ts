@@ -7,6 +7,8 @@ export function onEquip(player: mc.Player, state: PlayerState) {
 	player.startItemCooldown("slasher_reset", 1);
 }
 
+export function onUnequip(player: mc.Player, state: PlayerState) {}
+
 const SlasherItemComponent: mc.ItemCustomComponent = {
 	onBeforeDurabilityDamage(arg) {
 		arg.durabilityDamage = 0;

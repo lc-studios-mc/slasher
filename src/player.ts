@@ -1,5 +1,5 @@
 import * as mc from "@minecraft/server";
-import { onEquip, SLASHER_TYPE_ID } from "./slasher";
+import { onEquip, onUnequip, SLASHER_TYPE_ID } from "./slasher";
 
 export type PlayerState = {
 	slasher: {
@@ -28,12 +28,14 @@ function updateHeldItem(player: mc.Player) {
 	const equippable = player.getComponent(mc.EntityComponentTypes.Equippable)!;
 	const mainItem = equippable.getEquipment(mc.EquipmentSlot.Mainhand);
 
+	const prevItem = state.slasher.itemStack;
+
 	if (mainItem && mainItem.typeId === SLASHER_TYPE_ID) {
-		const wasHeld = state.slasher.itemStack !== null;
 		state.slasher.itemStack = mainItem;
-		if (!wasHeld) onEquip(player, state);
+		if (prevItem === null) onEquip(player, state);
 	} else {
 		state.slasher.itemStack = null;
+		if (prevItem !== null) onUnequip(player, state);
 	}
 }
 
