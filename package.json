@@ -2,6 +2,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"build": "node scripts/build.ts",
+		"watch": "node scripts/build.ts watch",
 		"format": "prettier --write .",
 		"typecheck": "tsc && tsc -p scripts/tsconfig.json"
 	},
