@@ -1,9 +1,14 @@
+import type { StateContext } from "./shared";
+import { Fsm } from "@/lib/fsm";
 import * as mc from "@minecraft/server";
 import { onEquip, onStartUse, onStopUse, onSwing, onTick, onUnequip } from "./behavior";
-import { SLASHER_TYPE_ID } from "./shared";
+import { SLASHER_TYPE_ID, StateName } from "./shared";
+import { IdleState } from "./states/idle";
+import { InactiveState } from "./states/inactive";
 
 export type SlasherSession = {
 	itemStack: mc.ItemStack | null;
+	fsm: Fsm<StateContext>;
 };
 
 const slasherSessions = new Map<mc.Player, SlasherSession>();
@@ -14,6 +19,13 @@ function getOrCreateSlasherSession(player: mc.Player): SlasherSession {
 
 	const newSession: SlasherSession = {
 		itemStack: null,
+		fsm: new Fsm<StateContext>(
+			{
+				[StateName.Inactive]: InactiveState,
+				[StateName.Idle]: IdleState,
+			},
+			StateName.Inactive,
+		),
 	};
 	slasherSessions.set(player, newSession);
 	return newSession;
