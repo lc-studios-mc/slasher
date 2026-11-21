@@ -1,6 +1,6 @@
 import * as mc from "@minecraft/server";
 
-const SLASHER_ITEM_TYPE = "slasher:slasher";
+const SLASHER_TYPE_ID = "slasher:slasher";
 
 const SlasherItemComponent: mc.ItemCustomComponent = {
 	onBeforeDurabilityDamage(arg) {
@@ -9,7 +9,7 @@ const SlasherItemComponent: mc.ItemCustomComponent = {
 };
 
 mc.system.beforeEvents.startup.subscribe((ev) => {
-	ev.itemComponentRegistry.registerCustomComponent(SLASHER_ITEM_TYPE, SlasherItemComponent);
+	ev.itemComponentRegistry.registerCustomComponent(SLASHER_TYPE_ID, SlasherItemComponent);
 });
 
 // disable vanilla attack damage by slasher
@@ -20,7 +20,7 @@ mc.world.beforeEvents.entityHurt.subscribe((ev) => {
 	const damagingItem = ev.damageSource.damagingEntity
 		?.getComponent(mc.EntityComponentTypes.Equippable)
 		?.getEquipment(mc.EquipmentSlot.Mainhand);
-	if (damagingItem?.typeId === SLASHER_ITEM_TYPE) {
+	if (damagingItem?.typeId === SLASHER_TYPE_ID) {
 		ev.cancel = true;
 	}
 });
