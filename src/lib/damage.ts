@@ -1,5 +1,5 @@
 import * as mc from "@minecraft/server";
-import { clamp } from "./number_utils";
+import { clamp } from "./number";
 
 /** Protection-family enchantment levels, summed across all worn armor pieces. */
 export interface ProtectionEnchantmentLevels {

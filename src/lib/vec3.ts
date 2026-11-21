@@ -1,5 +1,5 @@
 import type { Vector2, Vector3 } from "@minecraft/server";
-import { clamp as clampNumber, degToRad } from "./number_utils";
+import { clamp as clampNumber, degToRad } from "./number";
 
 export const ZERO = Object.freeze({ x: 0, y: 0, z: 0 });
 
