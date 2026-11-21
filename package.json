@@ -8,6 +8,9 @@
 		"typecheck": "tsc && tsc -p scripts/tsconfig.json",
 		"clean": "rimraf packs/bp/scripts"
 	},
+	"dependencies": {
+		"@minecraft/server": "2.11.0"
+	},
 	"devDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^4.7.1",
 		"@types/node": "^24.19.2",
