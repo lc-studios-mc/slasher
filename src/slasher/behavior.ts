@@ -5,7 +5,7 @@ import { SLASHER_TYPE_ID, StateName } from "./shared";
 export function onEquip(player: mc.Player, s: SlasherSession) {
 	player.startItemCooldown("slasher_reset", 1);
 
-	if (!s.fsm.hasStarted) s.fsm.start({ player, s });
+	s.fsm.start({ player, s });
 	s.fsm.changeState(StateName.Idle, { player, s });
 }
 

@@ -24,6 +24,8 @@ export class Fsm<TContext = unknown> {
 	}
 
 	start(ctx: TContext): void {
+		if (this._hasStarted) return;
+
 		this._current = this.requireState(this.initial);
 		this._hasStarted = true;
 
