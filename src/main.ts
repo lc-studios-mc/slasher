@@ -1,1 +1,1 @@
-import "./slasher/slasher";
+import "./slasher";
