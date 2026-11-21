@@ -1,13 +1,13 @@
-import type { PlayerState } from "./player";
+import type { SlasherState } from "./player";
 import * as mc from "@minecraft/server";
 
 export const SLASHER_TYPE_ID = "slasher:slasher";
 
-export function onEquip(player: mc.Player, state: PlayerState) {
+export function onEquip(player: mc.Player, state: SlasherState) {
 	player.startItemCooldown("slasher_reset", 1);
 }
 
-export function onUnequip(player: mc.Player, state: PlayerState) {}
+export function onUnequip(player: mc.Player, state: SlasherState) {}
 
 const SlasherItemComponent: mc.ItemCustomComponent = {
 	onBeforeDurabilityDamage(arg) {
