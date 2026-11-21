@@ -1,7 +1,10 @@
-import type { SlasherSession } from "./shared";
 import * as mc from "@minecraft/server";
 import { onEquip, onStartUse, onStopUse, onSwing, onUnequip } from "./behavior";
-import { createDefaultSlasherSession, SLASHER_TYPE_ID } from "./shared";
+import { SLASHER_TYPE_ID } from "./shared";
+
+export type SlasherSession = {
+	itemStack: mc.ItemStack | null;
+};
 
 const slasherSessions = new Map<string, SlasherSession>();
 
@@ -9,7 +12,9 @@ function getOrCreateSlasherSession(player: mc.Player): SlasherSession {
 	const current = slasherSessions.get(player.id);
 	if (current) return current;
 
-	const newSession = createDefaultSlasherSession();
+	const newSession: SlasherSession = {
+		itemStack: null,
+	};
 	slasherSessions.set(player.id, newSession);
 	return newSession;
 }

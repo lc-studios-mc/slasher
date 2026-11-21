@@ -1,4 +1,4 @@
-import type { SlasherSession } from "./shared";
+import type { SlasherSession } from "./session";
 import * as mc from "@minecraft/server";
 import { SLASHER_TYPE_ID } from "./shared";
 
