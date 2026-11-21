@@ -6,16 +6,16 @@ export type SlasherSession = {
 	itemStack: mc.ItemStack | null;
 };
 
-const slasherSessions = new Map<string, SlasherSession>();
+const slasherSessions = new Map<mc.Player, SlasherSession>();
 
 function getOrCreateSlasherSession(player: mc.Player): SlasherSession {
-	const current = slasherSessions.get(player.id);
+	const current = slasherSessions.get(player);
 	if (current) return current;
 
 	const newSession: SlasherSession = {
 		itemStack: null,
 	};
-	slasherSessions.set(player.id, newSession);
+	slasherSessions.set(player, newSession);
 	return newSession;
 }
 
@@ -60,26 +60,26 @@ mc.world.afterEvents.entityDie.subscribe((ev) => {
 });
 
 mc.world.beforeEvents.playerLeave.subscribe((ev) => {
-	slasherSessions.delete(ev.player.id);
+	slasherSessions.delete(ev.player);
 });
 
 // ----- extra event forwarding -----
 
 mc.world.afterEvents.itemStartUse.subscribe((ev) => {
-	const s = slasherSessions.get(ev.source.id);
+	const s = slasherSessions.get(ev.source);
 	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
 	onStartUse(ev.source, s);
 });
 
 mc.world.afterEvents.itemStopUse.subscribe((ev) => {
-	const s = slasherSessions.get(ev.source.id);
+	const s = slasherSessions.get(ev.source);
 	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
 	onStopUse(ev.source, s);
 });
 
 mc.world.afterEvents.playerSwingStart.subscribe(
 	(ev) => {
-		const s = slasherSessions.get(ev.player.id);
+		const s = slasherSessions.get(ev.player);
 		if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
 		onSwing(ev.player, s);
 	},
