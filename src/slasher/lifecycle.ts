@@ -1,6 +1,6 @@
 import type { SlasherContext } from "./shared";
 import * as mc from "@minecraft/server";
-import { SLASHER_TYPE_ID } from "./shared";
+import { createDefaultSlasherContext, SLASHER_TYPE_ID } from "./shared";
 import { onEquip, onUnequip } from "./slasher";
 
 const slasherContexts = new Map<string, SlasherContext>();
@@ -9,10 +9,7 @@ function getOrCreateSlasherContext(player: mc.Player): SlasherContext {
 	const current = slasherContexts.get(player.id);
 	if (current) return current;
 
-	const newCtx: SlasherContext = {
-		itemStack: null,
-	};
-
+	const newCtx = createDefaultSlasherContext();
 	slasherContexts.set(player.id, newCtx);
 	return newCtx;
 }
