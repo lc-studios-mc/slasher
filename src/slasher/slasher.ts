@@ -8,16 +8,6 @@ export function onEquip(player: mc.Player, state: SlasherState) {
 
 export function onUnequip(player: mc.Player, state: SlasherState) {}
 
-const SlasherItemComponent: mc.ItemCustomComponent = {
-	onBeforeDurabilityDamage(arg) {
-		arg.durabilityDamage = 0;
-	},
-};
-
-mc.system.beforeEvents.startup.subscribe((ev) => {
-	ev.itemComponentRegistry.registerCustomComponent(SLASHER_TYPE_ID, SlasherItemComponent);
-});
-
 // disable vanilla attack damage by slasher
 mc.world.beforeEvents.entityHurt.subscribe((ev) => {
 	if (ev.damageSource.cause !== mc.EntityDamageCause.entityAttack) return;
