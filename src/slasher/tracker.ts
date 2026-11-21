@@ -1,7 +1,7 @@
 import type { SlasherContext } from "./shared";
 import * as mc from "@minecraft/server";
+import { onEquip, onUnequip } from "./behavior";
 import { createDefaultSlasherContext, SLASHER_TYPE_ID } from "./shared";
-import { onEquip, onUnequip } from "./slasher";
 
 const slasherContexts = new Map<string, SlasherContext>();
 
