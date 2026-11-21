@@ -4,6 +4,8 @@
 	"scripts": {
 		"build": "node scripts/build.ts",
 		"watch": "node scripts/build.ts watch",
+		"link": "node --env-file=.env scripts/link.ts",
+		"unlink": "node --env-file=.env scripts/link.ts remove",
 		"format": "prettier --write .",
 		"typecheck": "tsc && tsc -p scripts/tsconfig.json",
 		"clean": "rimraf packs/bp/scripts"
