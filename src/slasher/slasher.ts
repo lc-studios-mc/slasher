@@ -1,7 +1,6 @@
-import type { SlasherState } from "./player";
+import type { SlasherState } from "./shared";
 import * as mc from "@minecraft/server";
-
-export const SLASHER_TYPE_ID = "slasher:slasher";
+import { SLASHER_TYPE_ID } from "./shared";
 
 export function onEquip(player: mc.Player, state: SlasherState) {
 	player.startItemCooldown("slasher_reset", 1);

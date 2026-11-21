@@ -1,9 +1,7 @@
+import type { SlasherState } from "./shared";
 import * as mc from "@minecraft/server";
-import { onEquip, onUnequip, SLASHER_TYPE_ID } from "./slasher";
-
-export type SlasherState = {
-	itemStack: mc.ItemStack | null;
-};
+import { SLASHER_TYPE_ID } from "./shared";
+import { onEquip, onUnequip } from "./slasher";
 
 const slasherStates = new Map<string, SlasherState>();
 
