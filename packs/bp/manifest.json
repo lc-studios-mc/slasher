@@ -1,0 +1,34 @@
+{
+	"format_version": 2,
+	"header": {
+		"description": "No description.",
+		"name": "Slasher Sword v2 [BP]",
+		"uuid": "5993bd6e-ba01-40a2-9618-481196cfa770",
+		"version": [2, 0, 0],
+		"min_engine_version": [1, 26, 60]
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "eb59416f-6ca1-417f-985b-0504de3edcf2",
+			"version": [2, 0, 0]
+		},
+		{
+			"type": "script",
+			"uuid": "aae74519-0cc4-42f7-83a7-ee7c988baef3",
+			"version": [2, 0, 0],
+			"language": "javascript",
+			"entry": "scripts/main.js"
+		}
+	],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.11.0"
+		},
+		{
+			"uuid": "b88d8acd-854f-43d3-a028-ee3c61add81c",
+			"version": [2, 0, 0]
+		}
+	]
+}
