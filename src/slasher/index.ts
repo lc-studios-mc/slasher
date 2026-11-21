@@ -1,2 +1,2 @@
 import "./component";
-import "./lifecycle";
+import "./tracker";
