@@ -1,0 +1,56 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:attachable": {
+		"description": {
+			"identifier": "slasher:slasher",
+			"materials": {
+				"slasher": "entity_emissive_alpha",
+				"fp_arms": "entity_alphatest"
+			},
+			"textures": {
+				"slasher": "textures/slasher/slasher2",
+				"fp_arms": "textures/slasher/player"
+			},
+			"geometry": {
+				"slasher.fp": "geometry.slasher.slasher.fp",
+				"slasher.tp": "geometry.slasher.slasher.tp",
+				"fp_arms": "geometry.slasher.fp_arms"
+			},
+			"animations": {
+				"fp.base": "animation.slasher.slasher.fp.base",
+				"fp.hide_test_arms": "animation.slasher.slasher.fp.hide_test_arms",
+				"fp.spinning": "animation.slasher.slasher.fp.spinning",
+				"fp.pick": "animation.slasher.slasher.fp.pick",
+				"fp.idle": "animation.slasher.slasher.fp.idle",
+				"tp.offset": "animation.slasher.slasher.tp.offset",
+
+				"controller.fp": "controller.animation.slasher.slasher.fp"
+			},
+			"scripts": {
+				"animate": [
+					"controller.fp",
+					"fp.spinning",
+					{ "fp.hide_test_arms": "c.is_first_person" },
+					{ "tp.offset": "!c.is_first_person" }
+				],
+				"initialize": [
+					"v.spinning_anim_time = 0;",
+					"v.spinning_speed = 0;",
+					"v.spinning_speed_next = 0;"
+				],
+				"pre_animation": [
+					"v.cd_reset = q.cooldown_time_remaining('slasher_reset');",
+
+					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 4 : v.spinning_speed > 5 ? 2 : 4) * q.delta_time, 0, 1);",
+					"v.spinning_speed = math.lerp(v.spinning_speed, v.spinning_speed_next, v.spinning_speed_lerp_t);",
+					"v.spinning_anim_time = math.mod(v.spinning_anim_time + v.spinning_speed * q.delta_time, 1);"
+				]
+			},
+			"render_controllers": [
+				{ "controller.render.slasher.slasher.fp": "c.is_first_person" },
+				{ "controller.render.slasher.slasher.tp": "!c.is_first_person" },
+				{ "controller.render.slasher.fp_arms": "c.is_first_person" }
+			]
+		}
+	}
+}

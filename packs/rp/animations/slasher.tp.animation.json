@@ -1,0 +1,15 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.slasher.slasher.tp.offset": {
+			"loop": true,
+			"bones": {
+				"item": {
+					"rotation": [-2.5, 0, -2.5],
+					"position": [0.25, 23, -0.5],
+					"scale": 0.93
+				}
+			}
+		}
+	}
+}
