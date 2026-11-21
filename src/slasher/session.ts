@@ -67,18 +67,21 @@ mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 
 mc.world.afterEvents.itemStartUse.subscribe((ev) => {
 	const s = slasherSessions.get(ev.source.id);
-	if (s) onStartUse(ev.source, s);
+	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
+	onStartUse(ev.source, s);
 });
 
 mc.world.afterEvents.itemStopUse.subscribe((ev) => {
 	const s = slasherSessions.get(ev.source.id);
-	if (s) onStopUse(ev.source, s);
+	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
+	onStopUse(ev.source, s);
 });
 
 mc.world.afterEvents.playerSwingStart.subscribe(
 	(ev) => {
 		const s = slasherSessions.get(ev.player.id);
-		if (s) onSwing(ev.player, s);
+		if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
+		onSwing(ev.player, s);
 	},
 	{ swingSource: mc.EntitySwingSource.Attack },
 );
