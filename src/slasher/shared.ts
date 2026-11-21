@@ -1,6 +1,6 @@
 import * as mc from "@minecraft/server";
 
-export type SlasherState = {
+export type SlasherContext = {
 	itemStack: mc.ItemStack | null;
 };
 

@@ -1,36 +1,36 @@
-import type { SlasherState } from "./shared";
+import type { SlasherContext } from "./shared";
 import * as mc from "@minecraft/server";
 import { SLASHER_TYPE_ID } from "./shared";
 import { onEquip, onUnequip } from "./slasher";
 
-const slasherStates = new Map<string, SlasherState>();
+const slasherContexts = new Map<string, SlasherContext>();
 
-function getOrCreateSlasherState(player: mc.Player): SlasherState {
-	const current = slasherStates.get(player.id);
+function getOrCreateSlasherContext(player: mc.Player): SlasherContext {
+	const current = slasherContexts.get(player.id);
 	if (current) return current;
 
-	const state: SlasherState = {
+	const newCtx: SlasherContext = {
 		itemStack: null,
 	};
 
-	slasherStates.set(player.id, state);
-	return state;
+	slasherContexts.set(player.id, newCtx);
+	return newCtx;
 }
 
 function updateSlasherHold(player: mc.Player) {
-	const state = getOrCreateSlasherState(player);
+	const ctx = getOrCreateSlasherContext(player);
 	const health = player.getComponent(mc.EntityComponentTypes.Health)!;
 	const equippable = player.getComponent(mc.EntityComponentTypes.Equippable)!;
 	const mainItem = equippable.getEquipment(mc.EquipmentSlot.Mainhand);
 
-	const prevItem = state.itemStack;
+	const prevItem = ctx.itemStack;
 
 	if (health.currentValue > 0 && mainItem && mainItem.typeId === SLASHER_TYPE_ID) {
-		state.itemStack = mainItem;
-		if (prevItem === null) onEquip(player, state);
+		ctx.itemStack = mainItem;
+		if (prevItem === null) onEquip(player, ctx);
 	} else {
-		state.itemStack = null;
-		if (prevItem !== null) onUnequip(player, state);
+		ctx.itemStack = null;
+		if (prevItem !== null) onUnequip(player, ctx);
 	}
 }
 
@@ -58,5 +58,5 @@ mc.world.afterEvents.entityDie.subscribe((ev) => {
 });
 
 mc.world.beforeEvents.playerLeave.subscribe((ev) => {
-	slasherStates.delete(ev.player.id);
+	slasherContexts.delete(ev.player.id);
 });

@@ -1,12 +1,12 @@
-import type { SlasherState } from "./shared";
+import type { SlasherContext } from "./shared";
 import * as mc from "@minecraft/server";
 import { SLASHER_TYPE_ID } from "./shared";
 
-export function onEquip(player: mc.Player, state: SlasherState) {
+export function onEquip(player: mc.Player, ctx: SlasherContext) {
 	player.startItemCooldown("slasher_reset", 1);
 }
 
-export function onUnequip(player: mc.Player, state: SlasherState) {}
+export function onUnequip(player: mc.Player, ctx: SlasherContext) {}
 
 // disable vanilla attack damage by slasher
 mc.world.beforeEvents.entityHurt.subscribe((ev) => {
