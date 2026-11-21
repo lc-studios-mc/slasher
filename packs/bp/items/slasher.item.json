@@ -8,6 +8,7 @@
 			}
 		},
 		"components": {
+			"slasher:slasher": {},
 			"minecraft:icon": "stick",
 			"minecraft:display_name": {
 				"value": "item.slasher:slasher"
