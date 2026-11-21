@@ -1,5 +1,5 @@
 import * as mc from "@minecraft/server";
-import { onEquip, onStartUse, onStopUse, onSwing, onUnequip } from "./behavior";
+import { onEquip, onStartUse, onStopUse, onSwing, onTick, onUnequip } from "./behavior";
 import { SLASHER_TYPE_ID } from "./shared";
 
 export type SlasherSession = {
@@ -64,6 +64,12 @@ mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 });
 
 // ----- extra event forwarding -----
+
+mc.system.runInterval(() => {
+	for (const [player, s] of slasherSessions.entries()) {
+		if (s.itemStack !== null) onTick(player, s);
+	}
+});
 
 mc.world.afterEvents.itemStartUse.subscribe((ev) => {
 	const s = slasherSessions.get(ev.source);

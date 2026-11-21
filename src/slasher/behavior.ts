@@ -8,6 +8,8 @@ export function onEquip(player: mc.Player, s: SlasherSession) {
 
 export function onUnequip(player: mc.Player, s: SlasherSession) {}
 
+export function onTick(player: mc.Player, s: SlasherSession) {}
+
 export function onStartUse(player: mc.Player, s: SlasherSession) {}
 
 export function onStopUse(player: mc.Player, s: SlasherSession) {}
