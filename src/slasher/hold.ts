@@ -1,6 +1,6 @@
 import type { SlasherSession } from "./shared";
 import * as mc from "@minecraft/server";
-import { onEquip, onUnequip } from "./behavior";
+import { onEquip, onStartUse, onStopUse, onSwing, onUnequip } from "./behavior";
 import { createDefaultSlasherSession, SLASHER_TYPE_ID } from "./shared";
 
 const slasherSessions = new Map<string, SlasherSession>();
@@ -57,3 +57,23 @@ mc.world.afterEvents.entityDie.subscribe((ev) => {
 mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 	slasherSessions.delete(ev.player.id);
 });
+
+// ----- extra event forwarding -----
+
+mc.world.afterEvents.itemStartUse.subscribe((ev) => {
+	const s = slasherSessions.get(ev.source.id);
+	if (s) onStartUse(ev.source, s);
+});
+
+mc.world.afterEvents.itemStopUse.subscribe((ev) => {
+	const s = slasherSessions.get(ev.source.id);
+	if (s) onStopUse(ev.source, s);
+});
+
+mc.world.afterEvents.playerSwingStart.subscribe(
+	(ev) => {
+		const s = slasherSessions.get(ev.player.id);
+		if (s) onSwing(ev.player, s);
+	},
+	{ swingSource: mc.EntitySwingSource.Attack },
+);

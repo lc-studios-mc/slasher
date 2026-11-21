@@ -8,6 +8,12 @@ export function onEquip(player: mc.Player, s: SlasherSession) {
 
 export function onUnequip(player: mc.Player, s: SlasherSession) {}
 
+export function onStartUse(player: mc.Player, s: SlasherSession) {}
+
+export function onStopUse(player: mc.Player, s: SlasherSession) {}
+
+export function onSwing(player: mc.Player, s: SlasherSession) {}
+
 // disable vanilla attack damage by slasher
 mc.world.beforeEvents.entityHurt.subscribe((ev) => {
 	if (ev.damageSource.cause !== mc.EntityDamageCause.entityAttack) return;
