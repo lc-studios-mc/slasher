@@ -25,12 +25,13 @@ function getOrCreatePlayerState(player: mc.Player): PlayerState {
 
 function updateHeldItem(player: mc.Player) {
 	const state = getOrCreatePlayerState(player);
+	const health = player.getComponent(mc.EntityComponentTypes.Health)!;
 	const equippable = player.getComponent(mc.EntityComponentTypes.Equippable)!;
 	const mainItem = equippable.getEquipment(mc.EquipmentSlot.Mainhand);
 
 	const prevItem = state.slasher.itemStack;
 
-	if (mainItem && mainItem.typeId === SLASHER_TYPE_ID) {
+	if (health.currentValue > 0 && mainItem && mainItem.typeId === SLASHER_TYPE_ID) {
 		state.slasher.itemStack = mainItem;
 		if (prevItem === null) onEquip(player, state);
 	} else {
@@ -57,6 +58,10 @@ mc.world.afterEvents.playerInventoryItemChange.subscribe(
 	},
 	{ ignoreQuantityChange: true, inventoryType: mc.PlayerInventoryType.Hotbar },
 );
+
+mc.world.afterEvents.entityDie.subscribe((ev) => {
+	if (ev.deadEntity instanceof mc.Player) updateHeldItem(ev.deadEntity);
+});
 
 mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 	playerStates.delete(ev.player.id);
