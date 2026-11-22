@@ -17,6 +17,8 @@ export class SlasherSession extends ItemSession {
 
 	override start() {
 		this.fsm.start({ s: this });
+
+		this.player.startItemCooldown("slasher_reset", 1);
 	}
 
 	override tick() {
