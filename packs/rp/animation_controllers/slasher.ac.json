@@ -6,11 +6,36 @@
 			"states": {
 				"pick": {
 					"animations": ["fp.pick"],
-					"transitions": [{ "idle": "q.all_animations_finished" }]
+					"transitions": [
+						{ "idle": "q.all_animations_finished" },
+						{ "slash.1": "v.cd_slash_1" },
+						{ "slash.2": "v.cd_slash_2" }
+					]
 				},
 
 				"idle": {
-					"animations": ["fp.idle"]
+					"animations": ["fp.idle"],
+					"transitions": [
+						{ "pick": "v.cd_reset" },
+						{ "slash.1": "v.cd_slash_1" },
+						{ "slash.2": "v.cd_slash_2" }
+					]
+				},
+
+				"slash.1": {
+					"animations": ["fp.slash.1"],
+					"transitions": [
+						{ "pick": "v.cd_reset || q.all_animations_finished" },
+						{ "slash.2": "v.cd_slash_2" }
+					]
+				},
+
+				"slash.2": {
+					"animations": ["fp.slash.2"],
+					"transitions": [
+						{ "pick": "v.cd_reset || q.all_animations_finished" },
+						{ "slash.1": "v.cd_slash_1" }
+					]
 				}
 			}
 		}

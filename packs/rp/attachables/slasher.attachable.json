@@ -42,6 +42,8 @@
 				],
 				"pre_animation": [
 					"v.cd_reset = q.cooldown_time_remaining('slasher_reset');",
+					"v.cd_slash_1 = q.cooldown_time_remaining('slasher_slash_1');",
+					"v.cd_slash_2 = q.cooldown_time_remaining('slasher_slash_2');",
 
 					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 4 : v.spinning_speed > 5 ? 2 : 4) * q.delta_time, 0, 1);",
 					"v.spinning_speed = math.lerp(v.spinning_speed, v.spinning_speed_next, v.spinning_speed_lerp_t);",
