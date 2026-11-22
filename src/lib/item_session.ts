@@ -32,6 +32,12 @@ export abstract class ItemSession {
 	kill() {}
 
 	tick() {}
+
+	onSwing(_ev: mc.PlayerSwingStartAfterEvent) {}
+
+	onStartUse(_ev: mc.ItemStartUseAfterEvent) {}
+
+	onStopUse(_ev: mc.ItemStopUseAfterEvent) {}
 }
 
 const factoriesByTypeId = new Map<string, ItemSessionFactory>();
@@ -127,4 +133,19 @@ mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 	} finally {
 		sessionsByPlayer.delete(ev.player);
 	}
+});
+
+mc.world.afterEvents.playerSwingStart.subscribe((ev) => {
+	const session = sessionsByPlayer.get(ev.player);
+	if (session) session.onSwing(ev);
+});
+
+mc.world.afterEvents.itemStartUse.subscribe((ev) => {
+	const session = sessionsByPlayer.get(ev.source);
+	if (session) session.onStartUse(ev);
+});
+
+mc.world.afterEvents.itemStopUse.subscribe((ev) => {
+	const session = sessionsByPlayer.get(ev.source);
+	if (session) session.onStopUse(ev);
 });
