@@ -22,6 +22,8 @@
 				"fp.spinning": "animation.slasher.slasher.fp.spinning",
 				"fp.pick": "animation.slasher.slasher.fp.pick",
 				"fp.idle": "animation.slasher.slasher.fp.idle",
+				"fp.slash.1": "animation.slasher.slasher.fp.slash.1",
+				"fp.slash.2": "animation.slasher.slasher.fp.slash.2",
 				"tp.offset": "animation.slasher.slasher.tp.offset",
 
 				"controller.fp": "controller.animation.slasher.slasher.fp"
