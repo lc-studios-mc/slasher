@@ -118,3 +118,13 @@ mc.world.afterEvents.playerInventoryItemChange.subscribe(
 	},
 	{ ignoreQuantityChange: true, inventoryType: mc.PlayerInventoryType.Hotbar },
 );
+
+mc.world.beforeEvents.playerLeave.subscribe((ev) => {
+	const session = sessionsByPlayer.get(ev.player);
+	if (!session) return;
+	try {
+		session.kill();
+	} finally {
+		sessionsByPlayer.delete(ev.player);
+	}
+});
