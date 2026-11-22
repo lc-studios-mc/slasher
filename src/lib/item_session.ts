@@ -99,6 +99,13 @@ mc.world.afterEvents.playerSpawn.subscribe((ev) => {
 	reconcileItemSession(ev.player);
 });
 
+mc.world.afterEvents.entityDie.subscribe(
+	(ev) => {
+		reconcileItemSession(ev.deadEntity as mc.Player);
+	},
+	{ entityTypes: ["minecraft:player"] },
+);
+
 mc.world.afterEvents.playerHotbarSelectedSlotChange.subscribe((ev) => {
 	reconcileItemSession(ev.player, ev.itemStack);
 });
