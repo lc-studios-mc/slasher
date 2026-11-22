@@ -1,105 +1,25 @@
 import type { StateContext } from "./shared";
 import { Fsm } from "@/lib/fsm";
+import { ItemSession, registerItemSession } from "@/lib/item_session";
 import * as mc from "@minecraft/server";
-import { onEquip, onStartUse, onStopUse, onSwing, onTick, onUnequip } from "./behavior";
 import { SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
-import { InactiveState } from "./states/inactive";
 
-export type SlasherSession = {
-	itemStack: mc.ItemStack | null;
-	fsm: Fsm<StateContext>;
-};
+registerItemSession(SLASHER_TYPE_ID, (ctx) => new SlasherSession(ctx));
 
-const slasherSessions = new Map<mc.Player, SlasherSession>();
+export class SlasherSession extends ItemSession {
+	readonly fsm = new Fsm<StateContext>(
+		{
+			[StateName.Idle]: IdleState,
+		},
+		StateName.Idle,
+	);
 
-function getOrCreateSlasherSession(player: mc.Player): SlasherSession {
-	const current = slasherSessions.get(player);
-	if (current) return current;
+	override start() {
+		this.fsm.start({ s: this });
+	}
 
-	const newSession: SlasherSession = {
-		itemStack: null,
-		fsm: new Fsm<StateContext>(
-			{
-				[StateName.Inactive]: InactiveState,
-				[StateName.Idle]: IdleState,
-			},
-			StateName.Inactive,
-		),
-	};
-	slasherSessions.set(player, newSession);
-	return newSession;
-}
-
-function updateSlasherHold(player: mc.Player) {
-	const s = getOrCreateSlasherSession(player);
-	const health = player.getComponent(mc.EntityComponentTypes.Health)!;
-	const equippable = player.getComponent(mc.EntityComponentTypes.Equippable)!;
-	const mainItem = equippable.getEquipment(mc.EquipmentSlot.Mainhand);
-
-	const prevItem = s.itemStack;
-
-	if (health.currentValue > 0 && mainItem && mainItem.typeId === SLASHER_TYPE_ID) {
-		s.itemStack = mainItem;
-		if (prevItem === null) onEquip(player, s);
-	} else {
-		s.itemStack = null;
-		if (prevItem !== null) onUnequip(player, s);
+	override tick() {
+		this.fsm.tick({ s: this });
 	}
 }
-
-mc.world.afterEvents.worldLoad.subscribe(() => {
-	mc.world.getAllPlayers().forEach(updateSlasherHold);
-});
-
-mc.world.afterEvents.playerSpawn.subscribe((ev) => {
-	updateSlasherHold(ev.player);
-});
-
-mc.world.afterEvents.playerHotbarSelectedSlotChange.subscribe((ev) => {
-	updateSlasherHold(ev.player);
-});
-
-mc.world.afterEvents.playerInventoryItemChange.subscribe(
-	(ev) => {
-		if (ev.slot === ev.player.selectedSlotIndex) updateSlasherHold(ev.player);
-	},
-	{ ignoreQuantityChange: true, inventoryType: mc.PlayerInventoryType.Hotbar },
-);
-
-mc.world.afterEvents.entityDie.subscribe((ev) => {
-	if (ev.deadEntity instanceof mc.Player) updateSlasherHold(ev.deadEntity);
-});
-
-mc.world.beforeEvents.playerLeave.subscribe((ev) => {
-	slasherSessions.delete(ev.player);
-});
-
-// ----- extra event forwarding -----
-
-mc.system.runInterval(() => {
-	for (const [player, s] of slasherSessions.entries()) {
-		if (s.itemStack !== null) onTick(player, s);
-	}
-});
-
-mc.world.afterEvents.itemStartUse.subscribe((ev) => {
-	const s = slasherSessions.get(ev.source);
-	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
-	onStartUse(ev.source, s);
-});
-
-mc.world.afterEvents.itemStopUse.subscribe((ev) => {
-	const s = slasherSessions.get(ev.source);
-	if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
-	onStopUse(ev.source, s);
-});
-
-mc.world.afterEvents.playerSwingStart.subscribe(
-	(ev) => {
-		const s = slasherSessions.get(ev.player);
-		if (s?.itemStack?.typeId !== SLASHER_TYPE_ID) return;
-		onSwing(ev.player, s);
-	},
-	{ swingSource: mc.EntitySwingSource.Attack },
-);
