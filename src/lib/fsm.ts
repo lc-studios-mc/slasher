@@ -19,7 +19,13 @@ export class Fsm<TContext = unknown> {
 		return this._hasStarted;
 	}
 
+	get currentState(): FsmState<TContext> {
+		this.throwIfNotStarted();
+		return this._current!;
+	}
+
 	get currentTick(): number {
+		this.throwIfNotStarted();
 		return this._currentTick;
 	}
 
