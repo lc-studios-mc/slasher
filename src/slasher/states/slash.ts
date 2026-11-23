@@ -51,7 +51,7 @@ export const SlashState: SlasherState = {
 
 				s.player.startItemCooldown("slasher_slash_hitstop", 2);
 
-				applyCameraShake(s.player, 0.12, 0.18, "rotational");
+				applyCameraShake(s.player, 0.1, 0.18, "rotational");
 
 				mc.system.run(() => {
 					attackTargets(s.player, targets);
