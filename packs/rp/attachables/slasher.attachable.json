@@ -9,7 +9,7 @@
 			},
 			"textures": {
 				"slasher": "textures/slasher/slasher2",
-				"fp_arms": "textures/slasher/player"
+				"fp_arms": "textures/entity/steve"
 			},
 			"geometry": {
 				"slasher.fp": "geometry.slasher.slasher.fp",
