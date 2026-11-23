@@ -418,7 +418,7 @@
 				}
 			},
 			"timeline": {
-				"0.0": "v.spinning_speed_next = 16;"
+				"0.0": "v.spinning_speed_next = 20;"
 			}
 		},
 		"animation.slasher.slasher.fp.slash.2": {
@@ -481,7 +481,7 @@
 				}
 			},
 			"timeline": {
-				"0.0": "v.spinning_speed_next = 16;"
+				"0.0": "v.spinning_speed_next = 20;"
 			}
 		}
 	}

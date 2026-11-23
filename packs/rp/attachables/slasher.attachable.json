@@ -48,7 +48,7 @@
 					"v.cd_slash_2 = q.cooldown_time_remaining('slasher_slash_2');",
 					"v.cd_slash_hitstop = q.cooldown_time_remaining('slasher_slash_hitstop');",
 
-					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 4 : v.spinning_speed > 5 ? 2 : 4) * q.delta_time, 0, 1);",
+					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 5 : v.spinning_speed > 5 ? 1.8 : 3) * q.delta_time, 0, 1);",
 					"v.spinning_speed = math.lerp(v.spinning_speed, v.spinning_speed_next, v.spinning_speed_lerp_t);",
 					"v.spinning_anim_time = math.mod(v.spinning_anim_time + v.spinning_speed * q.delta_time, 1);",
 
