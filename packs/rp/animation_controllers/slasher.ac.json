@@ -24,16 +24,20 @@
 
 				"slash.1": {
 					"animations": ["fp.slash.1"],
+					"on_entry": ["v.slash_anim_update = true;", "v.slash_anim_time = 0;"],
+					"on_exit": ["v.slash_anim_update = false;"],
 					"transitions": [
-						{ "pick": "v.cd_reset || q.all_animations_finished" },
+						{ "pick": "v.cd_reset || q.state_time >= 0.34" },
 						{ "slash.2": "v.cd_slash_2" }
 					]
 				},
 
 				"slash.2": {
 					"animations": ["fp.slash.2"],
+					"on_entry": ["v.slash_anim_update = true;", "v.slash_anim_time = 0;"],
+					"on_exit": ["v.slash_anim_update = false;"],
 					"transitions": [
-						{ "pick": "v.cd_reset || q.all_animations_finished" },
+						{ "pick": "v.cd_reset || q.state_time >= 0.34" },
 						{ "slash.1": "v.cd_slash_1" }
 					]
 				}

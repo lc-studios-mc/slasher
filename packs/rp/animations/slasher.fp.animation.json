@@ -358,6 +358,7 @@
 		"animation.slasher.slasher.fp.slash.1": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.3438,
+			"anim_time_update": "v.slash_anim_time ?? q.life_time",
 			"bones": {
 				"fp_arms": {
 					"rotation": [0, 0, 0],
@@ -423,6 +424,7 @@
 		"animation.slasher.slasher.fp.slash.2": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.3438,
+			"anim_time_update": "v.slash_anim_time ?? q.life_time",
 			"bones": {
 				"fp_arms": {
 					"rotation": [0, 0, 0],

@@ -38,16 +38,21 @@
 				"initialize": [
 					"v.spinning_anim_time = 0;",
 					"v.spinning_speed = 0;",
-					"v.spinning_speed_next = 0;"
+					"v.spinning_speed_next = 0;",
+					"v.slash_anim_time = 0;",
+					"v.slash_anim_update = false;"
 				],
 				"pre_animation": [
 					"v.cd_reset = q.cooldown_time_remaining('slasher_reset');",
 					"v.cd_slash_1 = q.cooldown_time_remaining('slasher_slash_1');",
 					"v.cd_slash_2 = q.cooldown_time_remaining('slasher_slash_2');",
+					"v.cd_slash_hitstop = q.cooldown_time_remaining('slasher_slash_hitstop');",
 
 					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 4 : v.spinning_speed > 5 ? 2 : 4) * q.delta_time, 0, 1);",
 					"v.spinning_speed = math.lerp(v.spinning_speed, v.spinning_speed_next, v.spinning_speed_lerp_t);",
-					"v.spinning_anim_time = math.mod(v.spinning_anim_time + v.spinning_speed * q.delta_time, 1);"
+					"v.spinning_anim_time = math.mod(v.spinning_anim_time + v.spinning_speed * q.delta_time, 1);",
+
+					"v.slash_anim_time = v.slash_anim_update ? v.slash_anim_time + (q.delta_time * (v.cd_slash_hitstop ? 0.1 : 1)) : v.slash_anim_time;"
 				]
 			},
 			"render_controllers": [
