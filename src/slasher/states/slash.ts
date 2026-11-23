@@ -47,7 +47,7 @@ export const SlashState: SlasherState = {
 			if (targets.length > 0) {
 				s.dimension.playSound("slasher.slasher.slash_hit", getFaceFrontLocation(s.player), {
 					volume: 1.2,
-					pitch: randomFloat(0.93, 1.07),
+					pitch: randomFloat(1.0, 1.1),
 				});
 
 				s.player.startItemCooldown("slasher_slash_hitstop", 2);
