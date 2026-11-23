@@ -3,7 +3,6 @@ import type { SlasherState } from "../shared";
 import { calculateReducedDamage } from "@/lib/damage";
 import { applyCameraShake, getFaceFrontLocation } from "@/lib/misc";
 import { randomFloat } from "@/lib/number";
-import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { scanForAttackTargets } from "../scan";
 import { StateName } from "../shared";
@@ -72,6 +71,8 @@ function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
 	for (const target of targets) {
 		if (!target.isValid) continue;
 
+		const lastYVel = target.getVelocity().y;
+
 		try {
 			const damage = calculateReducedDamage(target, 5);
 			target.applyDamage(damage, {
@@ -79,5 +80,8 @@ function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
 				damagingEntity: attacker,
 			});
 		} catch {}
+
+		target.applyKnockback({ x: 0, z: 0 }, 0);
+		target.applyImpulse({ x: 0, y: lastYVel, z: 0 });
 	}
 }
