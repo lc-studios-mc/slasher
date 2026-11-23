@@ -477,13 +477,13 @@ export function rotateZ(out: Vector3, v: Vector3, radians: number): Vector3 {
 
 /**
  * Converts local right/up/forward offsets into world-space points.
- * @param out - Vectors to write to; must be at least as long as `localOffsets`.
+ * @param out - Vectors to write to; grown with new vectors if shorter than `localOffsets`.
  * @param origin - World-space origin.
  * @param rotation - Pitch (`x`) and yaw (`y`) in degrees using Minecraft's convention (yaw 0 faces +Z,
  *   positive pitch looks down), e.g. from `entity.getRotation()`.
  * @param localOffsets - Local-space offsets (x=right, y=up, z=forward).
  * @returns The mutated `out`.
- * @throws If `out` or `localOffsets` has no entry at some index.
+ * @throws If `localOffsets` has no entry at some index.
  */
 export function resolveLocalOffsets<T extends Vector3[]>(
 	out: T,
@@ -515,8 +515,12 @@ export function resolveLocalOffsets<T extends Vector3[]>(
 
 	for (let i = 0; i < localOffsets.length; i++) {
 		const v = localOffsets[i];
-		const o = out[i];
-		if (!v || !o) throw new Error(`Missing vector at index ${i}`);
+		if (!v) throw new Error(`Missing local offset at index ${i}`);
+		let o = out[i];
+		if (!o) {
+			o = { x: 0, y: 0, z: 0 };
+			out.push(o);
+		}
 		// origin + right * v.x + up * v.y + forward * v.z (right has no y component)
 		set(
 			o,
