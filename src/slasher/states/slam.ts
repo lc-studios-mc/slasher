@@ -72,21 +72,25 @@ export const SlamClashState: SlasherState = {
 function performClash(s: SlasherSession) {
 	const heightDiff = s.highestSlamHeight - s.player.location.y;
 
-	if (heightDiff < 0.5) {
+	if (heightDiff < 1.3) {
+		s.player.onScreenDisplay.setActionBar(`§7${heightDiff.toFixed(1)}`);
+
 		s.dimension.playSound("mace.smash_air", s.slamLocation, { volume: 1.3 });
 		return;
 	}
 
 	if (heightDiff > 4.5) {
+		s.player.onScreenDisplay.setActionBar(`§l§c${heightDiff.toFixed(1)}`);
+
 		s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
 			volume: 1.7,
 			pitch: heightDiff > 30 ? 0.77 : heightDiff > 15 ? 0.85 : 1,
 		});
 	} else {
+		s.player.onScreenDisplay.setActionBar(`${heightDiff.toFixed(1)}`);
+
 		s.dimension.playSound("mace.heavy_smash_ground", s.slamLocation, {
 			volume: 1.4,
 		});
 	}
-
-	s.player.onScreenDisplay.setActionBar(`§l§c${heightDiff.toFixed(1)}`);
 }
