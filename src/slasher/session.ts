@@ -49,22 +49,9 @@ export class SlasherSession extends ItemSession {
 		}
 	}
 
-	override onStopUse(ev: mc.ItemStopUseAfterEvent) {
-		if (this.fsm.currentState === IdleState) {
-			this.fsm.changeState(StateName.SlamWindup, { s: this });
-		} else {
-			this.inputBuffer.push(ActionName.Slam);
-		}
-	}
-
 	processInputBuffer() {
 		if (this.inputBuffer.consume(ActionName.Slash)) {
 			this.fsm.changeState(StateName.Slash, { s: this });
-			return;
-		}
-
-		if (this.inputBuffer.consume(ActionName.Slam)) {
-			this.fsm.changeState(StateName.SlamWindup, { s: this });
 			return;
 		}
 	}
