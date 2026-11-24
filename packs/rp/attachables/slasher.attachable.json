@@ -24,6 +24,8 @@
 				"fp.idle": "animation.slasher.slasher.fp.idle",
 				"fp.slash.1": "animation.slasher.slasher.fp.slash.1",
 				"fp.slash.2": "animation.slasher.slasher.fp.slash.2",
+				"fp.slam.windup": "animation.slasher.slasher.fp.slam.windup",
+				"fp.slam.clash": "animation.slasher.slasher.fp.slam.clash",
 				"tp.offset": "animation.slasher.slasher.tp.offset",
 
 				"controller.fp": "controller.animation.slasher.slasher.fp"
