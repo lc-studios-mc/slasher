@@ -77,16 +77,13 @@ function performClash(s: SlasherSession) {
 		return;
 	}
 
-	if (heightDiff > 15) {
-		s.dimension.playSound("slasher.slasher.slam.clash.extreme", s.slamLocation, {
-			volume: 1.8,
-		});
-	} else if (heightDiff > 4.5) {
-		s.dimension.playSound("slasher.slasher.slam.clash.powerful", s.slamLocation, {
-			volume: 1.6,
+	if (heightDiff > 4.5) {
+		s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
+			volume: 1.7,
+			pitch: heightDiff > 30 ? 0.77 : heightDiff > 15 ? 0.85 : 1,
 		});
 	} else {
-		s.dimension.playSound("slasher.slasher.slam.clash.normal", s.slamLocation, {
+		s.dimension.playSound("mace.heavy_smash_ground", s.slamLocation, {
 			volume: 1.4,
 		});
 	}
