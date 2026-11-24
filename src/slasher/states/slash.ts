@@ -80,9 +80,8 @@ function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
 				cause: mc.EntityDamageCause.override,
 				damagingEntity: attacker,
 			});
+			target.applyKnockback({ x: 0, z: 0 }, 0);
+			target.applyImpulse({ x: 0, y: lastYVel, z: 0 });
 		} catch {}
-
-		target.applyKnockback({ x: 0, z: 0 }, 0);
-		target.applyImpulse({ x: 0, y: lastYVel, z: 0 });
 	}
 }
