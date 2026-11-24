@@ -1,8 +1,10 @@
 import type { SlasherSession } from "../session";
 import type { SlasherState } from "../shared";
-import { applyCameraShake, getFaceFrontLocation } from "@/lib/misc";
+import { calculateReducedDamage } from "@/lib/damage";
+import { applyCameraShake, getFaceFrontLocation, isCreativeOrSpectator } from "@/lib/misc";
 import { clamp, randomFloat } from "@/lib/number";
 import * as vec3 from "@/lib/vec3";
+import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
 export const SlamWindupState: SlasherState = {
@@ -77,12 +79,57 @@ function performClash(s: SlasherSession) {
 		return;
 	}
 
-	s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
-		volume: 1.7,
-		pitch: heightDiff > 20 ? 0.77 : heightDiff > 12 ? 0.85 : heightDiff > 5 ? 1 : 1.08,
-	});
+	if (heightDiff > 5) {
+		s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
+			volume: 1.55,
+			pitch: heightDiff >= 20 ? 0.75 : heightDiff >= 10 ? 0.85 : 1,
+		});
 
-	s.dimension.spawnEntity("slasher:slam_impact", s.slamLocation);
+		s.dimension.spawnEntity("slasher:slam_impact", s.slamLocation);
+	} else {
+		s.dimension.playSound("slasher.slasher.slash_hit", s.slamLocation, {
+			volume: 1.4,
+		});
+		s.dimension.playSound("mace.smash_ground_heavy", s.slamLocation, {
+			volume: 1.4,
+		});
+
+		s.dimension.spawnParticle("minecraft:dragon_destroy_block", {
+			x: s.slamLocation.x,
+			y: s.slamLocation.y + 0.3,
+			z: s.slamLocation.z,
+		});
+	}
 
 	applyCameraShake(s.player, 0.15, 0.2, "rotational");
+
+	const targets = s.dimension.getEntities({
+		location: s.slamLocation,
+		maxDistance: 4.5,
+		excludeTypes: ["minecraft:item", "minecraft:xp_orb"],
+	});
+
+	for (const target of targets) {
+		if (target === s.player) continue;
+
+		if (target instanceof mc.Player) {
+			if (!mc.world.gameRules.pvp) continue;
+			if (isCreativeOrSpectator(target)) continue;
+		}
+
+		const isOnGround = target.isOnGround;
+
+		try {
+			target.applyDamage(4, {
+				cause: mc.EntityDamageCause.maceSmash,
+				damagingEntity: s.player,
+			});
+
+			if (isOnGround) {
+				target.addEffect("slowness", 40, { amplifier: 1 });
+				target.clearVelocity();
+				target.applyImpulse({ x: 0, y: 0.4, z: 0 });
+			}
+		} catch {}
+	}
 }
