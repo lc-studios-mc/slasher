@@ -2,6 +2,7 @@ import type { StateContext } from "./shared";
 import { Fsm } from "@/lib/fsm";
 import { InputBuffer } from "@/lib/input_buffer";
 import { ItemSession, registerItemSession } from "@/lib/item_session";
+import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
@@ -22,6 +23,9 @@ export class SlasherSession extends ItemSession {
 	);
 
 	readonly inputBuffer = new InputBuffer<ActionName>();
+
+	highestSlamHeight = -999;
+	slamLocation: mc.Vector3 = vec3.ZERO;
 
 	override start() {
 		this.fsm.start({ s: this });
@@ -45,9 +49,23 @@ export class SlasherSession extends ItemSession {
 		}
 	}
 
+	override onStopUse(ev: mc.ItemStopUseAfterEvent) {
+		if (this.fsm.currentState === IdleState) {
+			this.fsm.changeState(StateName.SlamWindup, { s: this });
+		} else {
+			this.inputBuffer.push(ActionName.Slam);
+		}
+	}
+
 	processInputBuffer() {
 		if (this.inputBuffer.consume(ActionName.Slash)) {
 			this.fsm.changeState(StateName.Slash, { s: this });
+			return;
+		}
+
+		if (this.inputBuffer.consume(ActionName.Slam)) {
+			this.fsm.changeState(StateName.SlamWindup, { s: this });
+			return;
 		}
 	}
 }

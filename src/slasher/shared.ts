@@ -6,6 +6,7 @@ export const SLASHER_TYPE_ID = "slasher:slasher";
 export type ActionName = (typeof ActionName)[keyof typeof ActionName];
 export const ActionName = {
 	Slash: "slash",
+	Slam: "slam",
 } as const;
 
 export type StateName = (typeof StateName)[keyof typeof StateName];
