@@ -1,0 +1,19 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "slasher:slam_impact",
+			"animations": {
+				"particle": "animation.slasher.slam_impact.particle"
+			},
+			"scripts": {
+				"animate": ["particle"],
+				"should_update_effects_offscreen": "1.0"
+			},
+			"particle_effects": {
+				"smash_1": "minecraft:smash_ground_particle_center",
+				"smash_2": "minecraft:smash_ground_particle"
+			}
+		}
+	}
+}
