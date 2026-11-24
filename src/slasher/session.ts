@@ -1,8 +1,9 @@
 import type { StateContext } from "./shared";
 import { Fsm } from "@/lib/fsm";
+import { InputBuffer } from "@/lib/input_buffer";
 import { ItemSession, registerItemSession } from "@/lib/item_session";
 import * as mc from "@minecraft/server";
-import { SLASHER_TYPE_ID, StateName } from "./shared";
+import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
 import { SlashState } from "./states/slash";
 
@@ -17,6 +18,8 @@ export class SlasherSession extends ItemSession {
 		StateName.Idle,
 	);
 
+	readonly inputBuffer = new InputBuffer<ActionName>();
+
 	override start() {
 		this.fsm.start({ s: this });
 
@@ -24,6 +27,8 @@ export class SlasherSession extends ItemSession {
 	}
 
 	override tick() {
+		this.inputBuffer.prune();
+
 		this.fsm.tick({ s: this });
 	}
 
@@ -31,6 +36,14 @@ export class SlasherSession extends ItemSession {
 		if (ev.swingSource !== mc.EntitySwingSource.Attack) return;
 
 		if (this.fsm.currentState === IdleState) {
+			this.fsm.changeState(StateName.Slash, { s: this });
+		} else {
+			this.inputBuffer.push(ActionName.Slash);
+		}
+	}
+
+	processInputBuffer() {
+		if (this.inputBuffer.consume(ActionName.Slash)) {
 			this.fsm.changeState(StateName.Slash, { s: this });
 		}
 	}
