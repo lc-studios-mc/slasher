@@ -27,7 +27,7 @@
 					"on_entry": ["v.slash_anim_update = true;", "v.slash_anim_time = 0;"],
 					"on_exit": ["v.slash_anim_update = false;"],
 					"transitions": [
-						{ "pick": "v.cd_reset || q.state_time >= 0.34" },
+						{ "pick": "v.cd_reset || q.state_time >= 0.35" },
 						{ "slash.2": "v.cd_slash_2" }
 					]
 				},
@@ -37,7 +37,7 @@
 					"on_entry": ["v.slash_anim_update = true;", "v.slash_anim_time = 0;"],
 					"on_exit": ["v.slash_anim_update = false;"],
 					"transitions": [
-						{ "pick": "v.cd_reset || q.state_time >= 0.34" },
+						{ "pick": "v.cd_reset || q.state_time >= 0.35" },
 						{ "slash.1": "v.cd_slash_1" }
 					]
 				}
