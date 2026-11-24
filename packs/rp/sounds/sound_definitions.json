@@ -27,6 +27,31 @@
 					"volume": 0.62
 				}
 			]
+		},
+
+		"slasher.slasher.slam.windup": {
+			"category": "hostile",
+			"max_distance": 12.0,
+			"min_distance": null,
+			"sounds": [
+				{
+					"name": "sounds/slasher/slasher/slam_windup",
+					"volume": 0.55
+				}
+			]
+		},
+
+		"slasher.slasher.slam.clash_start": {
+			"category": "hostile",
+			"max_distance": 12.0,
+			"min_distance": null,
+			"sounds": [
+				{
+					"name": "sounds/slasher/slasher/slash",
+					"volume": 0.4,
+					"pitch": 0.88
+				}
+			]
 		}
 	}
 }
