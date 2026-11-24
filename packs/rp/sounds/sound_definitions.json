@@ -52,6 +52,18 @@
 					"pitch": 0.88
 				}
 			]
+		},
+
+		"slasher.slasher.slam.clash.powerful": {
+			"category": "hostile",
+			"max_distance": 16.0,
+			"min_distance": null,
+			"sounds": [
+				{
+					"name": "sounds/slasher/slasher/slam_clash_powerful",
+					"volume": 0.86
+				}
+			]
 		}
 	}
 }
