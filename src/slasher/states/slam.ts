@@ -1,9 +1,8 @@
 import type { SlasherSession } from "../session";
 import type { SlasherState } from "../shared";
-import { getFaceFrontLocation } from "@/lib/misc";
+import { applyCameraShake, getFaceFrontLocation } from "@/lib/misc";
 import { clamp, randomFloat } from "@/lib/number";
 import * as vec3 from "@/lib/vec3";
-import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
 export const SlamWindupState: SlasherState = {
@@ -34,12 +33,12 @@ export const SlamWindupState: SlasherState = {
 		s.player.applyImpulse({ x: 0, y: -0.1, z: 0 });
 
 		const blockBelow = s.dimension.getBlockBelow(s.player.location, {
+			maxDistance: clamp(-(s.player.getVelocity().y * 1.4), 1, 3.5),
 			includePassableBlocks: false,
 			includeLiquidBlocks: false,
 		});
 
-		if (s.player.isOnGround) {
-			s.slamLocation = s.player.location;
+		if (s.player.isOnGround || blockBelow) {
 			return StateName.SlamClash;
 		}
 	},
@@ -53,16 +52,17 @@ export const SlamClashState: SlasherState = {
 
 		s.player.applyImpulse({ x: 0, y: -0.8, z: 0 });
 
-		s.player.addEffect("slowness", 14, { amplifier: 0, showParticles: false });
-
-		s.dimension.playSound("slasher.slasher.slam.clash_start", s.slamLocation, {
+		s.dimension.playSound("slasher.slasher.slam.clash_start", s.player.location, {
 			volume: 1.2,
 		});
 	},
 
 	onTick({ s }) {
 		if (s.fsm.currentTick === 0) {
+			s.slamLocation = s.player.location;
 			performClash(s);
+		} else if (s.fsm.currentTick < 8) {
+			s.player.clearVelocity();
 		}
 
 		if (s.fsm.currentTick >= 8) return StateName.Idle;
@@ -70,27 +70,19 @@ export const SlamClashState: SlasherState = {
 };
 
 function performClash(s: SlasherSession) {
-	const heightDiff = s.highestSlamHeight - s.player.location.y;
+	const heightDiff = s.highestSlamHeight - s.slamLocation.y;
 
 	if (heightDiff < 1.3) {
-		s.player.onScreenDisplay.setActionBar(`§7${heightDiff.toFixed(1)}`);
-
 		s.dimension.playSound("mace.smash_air", s.slamLocation, { volume: 1.3 });
 		return;
 	}
 
-	if (heightDiff > 4.5) {
-		s.player.onScreenDisplay.setActionBar(`§l§c${heightDiff.toFixed(1)}`);
+	s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
+		volume: 1.7,
+		pitch: heightDiff > 20 ? 0.77 : heightDiff > 12 ? 0.85 : heightDiff > 5 ? 1 : 1.08,
+	});
 
-		s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
-			volume: 1.7,
-			pitch: heightDiff > 30 ? 0.77 : heightDiff > 15 ? 0.85 : 1,
-		});
-	} else {
-		s.player.onScreenDisplay.setActionBar(`${heightDiff.toFixed(1)}`);
+	s.dimension.spawnEntity("slasher:slam_impact", s.slamLocation);
 
-		s.dimension.playSound("mace.heavy_smash_ground", s.slamLocation, {
-			volume: 1.4,
-		});
-	}
+	applyCameraShake(s.player, 0.15, 0.2, "rotational");
 }
