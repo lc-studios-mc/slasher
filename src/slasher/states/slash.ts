@@ -27,9 +27,11 @@ export const SlashState: SlasherState = {
 		if (s.player.getItemCooldown("slasher_slash_alt")) {
 			s.player.startItemCooldown("slasher_slash_2", 2);
 			s.player.startItemCooldown("slasher_slash_alt", 0);
+			s.player.playAnimation("animation.slasher.slasher.player.slash.2");
 		} else {
 			s.player.startItemCooldown("slasher_slash_1", 2);
 			s.player.startItemCooldown("slasher_slash_alt", 40);
+			s.player.playAnimation("animation.slasher.slasher.player.slash.1");
 		}
 
 		s.dimension.playSound("slasher.slasher.slash", getFaceFrontLocation(s.player), {
@@ -80,6 +82,7 @@ function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
 				cause: mc.EntityDamageCause.override,
 				damagingEntity: attacker,
 			});
+
 			target.applyKnockback({ x: 0, z: 0 }, 0);
 			target.applyImpulse({ x: 0, y: lastYVel, z: 0 });
 		} catch {}
