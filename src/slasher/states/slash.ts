@@ -7,6 +7,7 @@ import * as mc from "@minecraft/server";
 import { scanForAttackTargets } from "../scan";
 import { StateName } from "../shared";
 
+const SLASH_DAMAGE = 6;
 const SLASH_DURATION = 0.35 * mc.TicksPerSecond;
 
 const scanConfig: AttackScanConfig = {
@@ -74,7 +75,7 @@ function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
 		const lastYVel = target.getVelocity().y;
 
 		try {
-			const damage = calculateReducedDamage(target, 5);
+			const damage = calculateReducedDamage(target, SLASH_DAMAGE);
 			target.applyDamage(damage, {
 				cause: mc.EntityDamageCause.override,
 				damagingEntity: attacker,
