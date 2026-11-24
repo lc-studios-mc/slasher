@@ -12,6 +12,8 @@ export type StateName = (typeof StateName)[keyof typeof StateName];
 export const StateName = {
 	Idle: "idle",
 	Slash: "slash",
+	SlamWindup: "slamWindup",
+	SlamClash: "slamClash",
 } as const;
 
 export type StateContext = {

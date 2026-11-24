@@ -5,6 +5,7 @@ import { ItemSession, registerItemSession } from "@/lib/item_session";
 import * as mc from "@minecraft/server";
 import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
+import { SlamClashState, SlamWindupState } from "./states/slam";
 import { SlashState } from "./states/slash";
 
 registerItemSession(SLASHER_TYPE_ID, (ctx) => new SlasherSession(ctx));
@@ -14,6 +15,8 @@ export class SlasherSession extends ItemSession {
 		{
 			[StateName.Idle]: IdleState,
 			[StateName.Slash]: SlashState,
+			[StateName.SlamWindup]: SlamWindupState,
+			[StateName.SlamClash]: SlamClashState,
 		},
 		StateName.Idle,
 	);
