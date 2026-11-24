@@ -38,19 +38,8 @@ export const SlamWindupState: SlasherState = {
 			includeLiquidBlocks: false,
 		});
 
-		const shouldClash =
-			s.player.isOnGround ||
-			(blockBelow &&
-				s.player.location.y - blockBelow.y <
-					clamp(-(s.player.getVelocity().y * 1.5), 1, 3));
-
-		if (shouldClash) {
-			s.slamLocation = {
-				x: s.player.location.x,
-				y: blockBelow ? blockBelow.y + 1 : s.player.location.y,
-				z: s.player.location.z,
-			};
-
+		if (s.player.isOnGround) {
+			s.slamLocation = s.player.location;
 			return StateName.SlamClash;
 		}
 	},
@@ -62,7 +51,6 @@ export const SlamClashState: SlasherState = {
 	onEnter({ s }) {
 		s.player.startItemCooldown("slasher_slam_clash", 2);
 
-		s.player.clearVelocity();
 		s.player.applyImpulse({ x: 0, y: -0.8, z: 0 });
 
 		s.player.addEffect("slowness", 14, { amplifier: 0, showParticles: false });
