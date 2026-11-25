@@ -10,7 +10,7 @@
 						{ "idle": "q.all_animations_finished" },
 						{ "slash.1": "v.cd_slash_1" },
 						{ "slash.2": "v.cd_slash_2" },
-						{ "slam.windup": "v.cd_slam_windup" }
+						{ "slam.ready": "v.cd_slam_ready" }
 					]
 				},
 
@@ -20,7 +20,7 @@
 						{ "pick": "v.cd_reset" },
 						{ "slash.1": "v.cd_slash_1" },
 						{ "slash.2": "v.cd_slash_2" },
-						{ "slam.windup": "v.cd_slam_windup" }
+						{ "slam.ready": "v.cd_slam_ready" }
 					]
 				},
 
@@ -44,10 +44,10 @@
 					]
 				},
 
-				"slam.windup": {
-					"animations": ["fp.slam.windup"],
+				"slam.ready": {
+					"animations": ["fp.slam.ready"],
 					"transitions": [{ "pick": "v.cd_reset" }, { "slam.clash": "v.cd_slam_clash" }],
-					"blend_transition": 0.05
+					"blend_transition": 0.04
 				},
 
 				"slam.clash": {

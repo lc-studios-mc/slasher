@@ -24,7 +24,7 @@
 				"fp.idle": "animation.slasher.slasher.fp.idle",
 				"fp.slash.1": "animation.slasher.slasher.fp.slash.1",
 				"fp.slash.2": "animation.slasher.slasher.fp.slash.2",
-				"fp.slam.windup": "animation.slasher.slasher.fp.slam.windup",
+				"fp.slam.ready": "animation.slasher.slasher.fp.slam.ready",
 				"fp.slam.clash": "animation.slasher.slasher.fp.slam.clash",
 				"tp.offset": "animation.slasher.slasher.tp.offset",
 
@@ -49,7 +49,7 @@
 					"v.cd_slash_1 = q.cooldown_time_remaining('slasher_slash_1');",
 					"v.cd_slash_2 = q.cooldown_time_remaining('slasher_slash_2');",
 					"v.cd_slash_hitstop = q.cooldown_time_remaining('slasher_slash_hitstop');",
-					"v.cd_slam_windup = q.cooldown_time_remaining('slasher_slam_windup');",
+					"v.cd_slam_ready = q.cooldown_time_remaining('slasher_slam_ready');",
 					"v.cd_slam_clash = q.cooldown_time_remaining('slasher_slam_clash');",
 
 					"v.spinning_speed_lerp_t = math.clamp((v.spinning_speed_next > v.spinning_speed ? 5 : v.spinning_speed > 5 ? 1.8 : 3) * q.delta_time, 0, 1);",
