@@ -1,30 +1,23 @@
 import type { SlasherSession } from "../session";
 import type { SlasherState } from "../shared";
-import { calculateReducedDamage } from "@/lib/damage";
 import { applyCameraShake, getFaceFrontLocation, isCreativeOrSpectator } from "@/lib/misc";
 import { clamp, randomFloat } from "@/lib/number";
 import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
-export const SlamWindupState: SlasherState = {
-	name: StateName.SlamWindup,
+export const SlamReadyState: SlasherState = {
+	name: StateName.SlamReady,
 
 	onEnter({ s }) {
-		s.dimension.playSound("slasher.slasher.slam.windup", getFaceFrontLocation(s.player), {
+		s.dimension.playSound("slasher.slasher.slam.ready", getFaceFrontLocation(s.player), {
+			volume: 1.5,
 			pitch: randomFloat(0.95, 1.05),
-			volume: 1.3,
 		});
 
-		s.player.startItemCooldown("slasher_slam_windup", 2);
+		s.player.startItemCooldown("slasher_slam_ready", 2);
 
-		s.player.applyImpulse({
-			x: 0,
-			y: clamp(1 - s.player.getVelocity().y, 0, 1),
-			z: 0,
-		});
-
-		s.highestSlamHeight = -999;
+		s.highestSlamHeight = s.player.location.y;
 	},
 
 	onTick({ s }) {
@@ -32,10 +25,14 @@ export const SlamWindupState: SlasherState = {
 			s.highestSlamHeight = s.player.location.y;
 		}
 
-		s.player.applyImpulse({ x: 0, y: -0.1, z: 0 });
+		const yVel = s.player.getVelocity().y;
+
+		if (yVel > -3) {
+			s.player.applyImpulse({ x: 0, y: -0.13, z: 0 });
+		}
 
 		const blockBelow = s.dimension.getBlockBelow(s.player.location, {
-			maxDistance: clamp(-(s.player.getVelocity().y * 1.4), 1, 3.5),
+			maxDistance: clamp(-(yVel * 1.4), 1, 3.5),
 			includePassableBlocks: false,
 			includeLiquidBlocks: false,
 		});
@@ -51,61 +48,51 @@ export const SlamClashState: SlasherState = {
 
 	onEnter({ s }) {
 		s.player.startItemCooldown("slasher_slam_clash", 2);
-
 		s.player.applyImpulse({ x: 0, y: -0.8, z: 0 });
 
-		s.dimension.playSound("slasher.slasher.slam.clash_start", s.player.location, {
-			volume: 1.2,
-		});
+		s.slamLocation = s.player.location;
+		performClash(s);
 	},
 
 	onTick({ s }) {
-		if (s.fsm.currentTick === 0) {
-			s.slamLocation = s.player.location;
-			performClash(s);
-		} else if (s.fsm.currentTick < 8) {
-			s.player.clearVelocity();
-		}
-
-		if (s.fsm.currentTick >= 8) return StateName.Idle;
+		if (s.fsm.currentTick >= 10) return StateName.Idle;
 	},
 };
+
+const STRONG_HEIGHT = 8;
 
 function performClash(s: SlasherSession) {
 	const heightDiff = s.highestSlamHeight - s.slamLocation.y;
 
-	if (heightDiff < 1.3) {
-		s.dimension.playSound("mace.smash_air", s.slamLocation, { volume: 1.3 });
-		return;
-	}
-
-	if (heightDiff > 5) {
-		s.dimension.playSound("slasher.slasher.slam.clash", s.slamLocation, {
-			volume: 1.55,
-			pitch: heightDiff >= 20 ? 0.75 : heightDiff >= 10 ? 0.85 : 1,
+	if (heightDiff >= STRONG_HEIGHT) {
+		s.dimension.playSound("slasher.slasher.slam.clash.strong", s.slamLocation, {
+			volume: 1.5,
+			pitch: randomFloat(0.95, 1.05),
 		});
 
 		s.dimension.spawnEntity("slasher:slam_impact", s.slamLocation);
+
+		applyCameraShake(s.player, 0.14, 0.3, "rotational");
+
+		s.player.addEffect("slowness", 20, { amplifier: 1, showParticles: false });
 	} else {
-		s.dimension.playSound("slasher.slasher.slash_hit", s.slamLocation, {
-			volume: 1.4,
-		});
-		s.dimension.playSound("mace.smash_ground_heavy", s.slamLocation, {
-			volume: 1.4,
+		s.dimension.playSound("slasher.slasher.slam.clash.weak", s.slamLocation, {
+			volume: 1.5,
+			pitch: randomFloat(0.95, 1.05),
 		});
 
-		s.dimension.spawnParticle("minecraft:dragon_destroy_block", {
-			x: s.slamLocation.x,
-			y: s.slamLocation.y + 0.3,
-			z: s.slamLocation.z,
+		s.dimension.playSound("mace.heavy_smash_ground", s.slamLocation, {
+			volume: 1.2,
 		});
+
+		applyCameraShake(s.player, 0.1, 0.3, "rotational");
+
+		s.player.addEffect("slowness", 12, { amplifier: 0, showParticles: false });
 	}
-
-	applyCameraShake(s.player, 0.15, 0.2, "rotational");
 
 	const targets = s.dimension.getEntities({
 		location: s.slamLocation,
-		maxDistance: 4.5,
+		maxDistance: heightDiff >= STRONG_HEIGHT ? Math.min(10, 4 + heightDiff / 4) : 3.4,
 		excludeTypes: ["minecraft:item", "minecraft:xp_orb"],
 	});
 
@@ -117,19 +104,18 @@ function performClash(s: SlasherSession) {
 			if (isCreativeOrSpectator(target)) continue;
 		}
 
-		const isOnGround = target.isOnGround;
-
 		try {
-			target.applyDamage(4, {
+			const baseDamage = heightDiff >= 3 + STRONG_HEIGHT * 1.2 ? heightDiff : 4;
+			const dist = vec3.distance(target.location, s.player.location);
+			const isCloseOrGrounded = target.isOnGround || dist < 2.8;
+			const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
+
+			if (isCloseOrGrounded) target.clearVelocity();
+
+			target.applyDamage(damage, {
 				cause: mc.EntityDamageCause.maceSmash,
 				damagingEntity: s.player,
 			});
-
-			if (isOnGround) {
-				target.addEffect("slowness", 40, { amplifier: 1 });
-				target.clearVelocity();
-				target.applyImpulse({ x: 0, y: 0.4, z: 0 });
-			}
 		} catch {}
 	}
 }

@@ -6,7 +6,7 @@ import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
-import { SlamClashState, SlamWindupState } from "./states/slam";
+import { SlamClashState, SlamReadyState } from "./states/slam";
 import { SlashState } from "./states/slash";
 
 registerItemSession(SLASHER_TYPE_ID, (ctx) => new SlasherSession(ctx));
@@ -16,7 +16,7 @@ export class SlasherSession extends ItemSession {
 		{
 			[StateName.Idle]: IdleState,
 			[StateName.Slash]: SlashState,
-			[StateName.SlamWindup]: SlamWindupState,
+			[StateName.SlamReady]: SlamReadyState,
 			[StateName.SlamClash]: SlamClashState,
 		},
 		StateName.Idle,
@@ -40,6 +40,12 @@ export class SlasherSession extends ItemSession {
 	}
 
 	override onSwing(ev: mc.PlayerSwingStartAfterEvent) {
+		if (!ev.player.isOnGround && ev.player.isSneaking) {
+			if (this.fsm.currentState === IdleState)
+				this.fsm.changeState(StateName.SlamReady, { s: this });
+			return;
+		}
+
 		if (ev.swingSource !== mc.EntitySwingSource.Attack) return;
 
 		if (this.fsm.currentState === IdleState) {
