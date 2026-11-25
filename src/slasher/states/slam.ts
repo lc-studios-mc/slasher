@@ -107,7 +107,7 @@ function performClash(s: SlasherSession) {
 		const dist = vec3.distance(target.location, s.player.location);
 		const isCloseOrGrounded = target.isOnGround || dist < 2.8;
 
-		const baseDamage = heightDiff >= 3 + STRONG_HEIGHT * 1.2 ? heightDiff : 4;
+		const baseDamage = heightDiff >= STRONG_HEIGHT ? 8 + heightDiff * 1.3 : 4;
 		const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
 
 		try {
