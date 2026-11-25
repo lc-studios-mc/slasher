@@ -40,7 +40,11 @@ export class SlasherSession extends ItemSession {
 	}
 
 	override onSwing(ev: mc.PlayerSwingStartAfterEvent) {
-		if (!ev.player.isOnGround && ev.player.isSneaking) {
+		if (
+			!ev.player.isOnGround &&
+			(ev.player.isSneaking ||
+				ev.player.inputInfo.getButtonState(mc.InputButton.Sneak) === mc.ButtonState.Pressed)
+		) {
 			if (this.fsm.currentState === IdleState)
 				this.fsm.changeState(StateName.SlamReady, { s: this });
 			return;
