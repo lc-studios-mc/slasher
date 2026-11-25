@@ -538,6 +538,9 @@
 						"0.1667": [1.5, -1, 0]
 					}
 				}
+			},
+			"timeline": {
+				"0.0": "v.spinning_speed_next = 20;"
 			}
 		},
 		"animation.slasher.slasher.fp.slam.clash": {
@@ -601,6 +604,9 @@
 					"rotation": [-38.95, 35.83, -25.63],
 					"position": [1.5, -1, 0]
 				}
+			},
+			"timeline": {
+				"0.0": "v.spinning_speed_next = 20;"
 			}
 		}
 	}
