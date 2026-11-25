@@ -8,7 +8,7 @@
 			"sounds": [
 				{
 					"name": "sounds/slasher/slasher/slash",
-					"volume": 0.48
+					"volume": 0.53
 				}
 			]
 		},
@@ -20,11 +20,11 @@
 			"sounds": [
 				{
 					"name": "sounds/mob/player/attack/crit1",
-					"volume": 0.62
+					"volume": 0.4
 				},
 				{
 					"name": "sounds/mob/player/attack/crit2",
-					"volume": 0.62
+					"volume": 0.4
 				}
 			]
 		},
