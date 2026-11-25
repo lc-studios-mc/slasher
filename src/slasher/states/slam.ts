@@ -104,18 +104,33 @@ function performClash(s: SlasherSession) {
 			if (isCreativeOrSpectator(target)) continue;
 		}
 
+		const dist = vec3.distance(target.location, s.player.location);
+		const isCloseOrGrounded = target.isOnGround || dist < 2.8;
+
+		const baseDamage = heightDiff >= 3 + STRONG_HEIGHT * 1.2 ? heightDiff : 4;
+		const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
+
 		try {
-			const baseDamage = heightDiff >= 3 + STRONG_HEIGHT * 1.2 ? heightDiff : 4;
-			const dist = vec3.distance(target.location, s.player.location);
-			const isCloseOrGrounded = target.isOnGround || dist < 2.8;
-			const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
-
-			if (isCloseOrGrounded) target.clearVelocity();
-
 			target.applyDamage(damage, {
 				cause: mc.EntityDamageCause.maceSmash,
 				damagingEntity: s.player,
 			});
+		} catch {}
+
+		if (!target.isValid) continue;
+		if (!isCloseOrGrounded) continue;
+
+		const knockbackVec = vec3.create();
+		vec3.subtract(knockbackVec, target.location, s.player.location);
+		knockbackVec.y = 0;
+		vec3.normalize(knockbackVec, knockbackVec);
+		vec3.multiplyScalar(knockbackVec, knockbackVec, 1.1);
+
+		try {
+			target.applyKnockback(knockbackVec, 0.3);
+			if (!(target instanceof mc.Player)) {
+				target.addEffect("slowness", 20, { amplifier: 1 });
+			}
 		} catch {}
 	}
 }
