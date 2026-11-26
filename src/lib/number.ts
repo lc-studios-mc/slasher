@@ -22,3 +22,8 @@ export function randomInt(min: number, max: number): number {
 export function randomFloat(min: number, max: number): number {
 	return Math.random() * (max - min) + min;
 }
+
+/** Returns true if two numbers are equal within a tolerance. */
+export function approxEquals(a: number, b: number, epsilon = 1e-9): boolean {
+	return Math.abs(a - b) <= epsilon;
+}
