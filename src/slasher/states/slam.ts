@@ -6,6 +6,8 @@ import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
+const REV_CONSUMPTION_ON_POWERFUL = 0.4;
+
 export const SlamReadyState: SlasherState = {
 	name: StateName.SlamReady,
 
@@ -59,12 +61,11 @@ export const SlamClashState: SlasherState = {
 	},
 };
 
-const STRONG_HEIGHT = 8;
-
 function performClash(s: SlasherSession) {
+	const powerful = s.revState.consumeRev(REV_CONSUMPTION_ON_POWERFUL);
 	const heightDiff = s.highestSlamHeight - s.slamLocation.y;
 
-	if (heightDiff >= STRONG_HEIGHT) {
+	if (powerful) {
 		s.dimension.playSound("slasher.slasher.slam.clash.strong", s.slamLocation, {
 			volume: 1.5,
 			pitch: randomFloat(0.95, 1.05),
@@ -92,7 +93,7 @@ function performClash(s: SlasherSession) {
 
 	const targets = s.dimension.getEntities({
 		location: s.slamLocation,
-		maxDistance: heightDiff >= STRONG_HEIGHT ? Math.min(10, 4 + heightDiff / 4) : 3.4,
+		maxDistance: powerful ? Math.min(10, 4 + heightDiff / 4) : 3.4,
 		excludeTypes: ["minecraft:item", "minecraft:xp_orb"],
 	});
 
@@ -107,7 +108,7 @@ function performClash(s: SlasherSession) {
 		const dist = vec3.distance(target.location, s.player.location);
 		const isCloseOrGrounded = target.isOnGround || dist < 2.8;
 
-		const baseDamage = heightDiff >= STRONG_HEIGHT ? 8 + heightDiff * 1.3 : 4;
+		const baseDamage = powerful ? 8 + heightDiff * 1.3 : 4;
 		const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
 
 		try {

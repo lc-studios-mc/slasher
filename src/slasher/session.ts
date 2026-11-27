@@ -4,6 +4,7 @@ import { InputBuffer } from "@/lib/input_buffer";
 import { ItemSession, registerItemSession } from "@/lib/item_session";
 import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
+import { getRevState } from "./rev";
 import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
 import { SlamClashState, SlamReadyState } from "./states/slam";
@@ -24,6 +25,8 @@ export class SlasherSession extends ItemSession {
 
 	readonly inputBuffer = new InputBuffer<ActionName>();
 
+	readonly revState = getRevState(this.player);
+
 	highestSlamHeight = -999;
 	slamLocation: mc.Vector3 = vec3.ZERO;
 
@@ -37,6 +40,10 @@ export class SlasherSession extends ItemSession {
 		this.inputBuffer.prune();
 
 		this.fsm.tick({ s: this });
+
+		this.player.onScreenDisplay.setActionBar(
+			`§eREV. ${Math.round(this.revState.currentRev * 100)}%`,
+		);
 	}
 
 	override onSwing(ev: mc.PlayerSwingStartAfterEvent) {

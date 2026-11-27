@@ -1,4 +1,5 @@
 import type { AttackScanConfig } from "../scan";
+import type { SlasherSession } from "../session";
 import type { SlasherState } from "../shared";
 import { calculateReducedDamage } from "@/lib/damage";
 import { applyCameraShake, getFaceFrontLocation } from "@/lib/misc";
@@ -9,6 +10,7 @@ import { StateName } from "../shared";
 
 const SLASH_DAMAGE = 6;
 const SLASH_DURATION = 0.35 * mc.TicksPerSecond;
+const REV_GAIN_ON_HIT = 0.04;
 
 const scanConfig: AttackScanConfig = {
 	maxDistance: 8,
@@ -56,9 +58,7 @@ export const SlashState: SlasherState = {
 
 				applyCameraShake(s.player, 0.1, 0.18, "rotational");
 
-				mc.system.run(() => {
-					attackTargets(s.player, targets);
-				});
+				attackTargets(s, targets);
 			}
 		}
 
@@ -68,23 +68,29 @@ export const SlashState: SlasherState = {
 	},
 };
 
-function attackTargets(attacker: mc.Player, targets: mc.Entity[]): void {
-	if (!attacker.isValid) return;
+function attackTargets(s: SlasherSession, targets: mc.Entity[]): void {
+	if (!s.player.isValid) return;
 
 	for (const target of targets) {
 		if (!target.isValid) continue;
 
 		const lastYVel = target.getVelocity().y;
 
+		let damaged = false;
+
 		try {
 			const damage = calculateReducedDamage(target, SLASH_DAMAGE);
-			target.applyDamage(damage, {
+			damaged = target.applyDamage(damage, {
 				cause: mc.EntityDamageCause.override,
-				damagingEntity: attacker,
+				damagingEntity: s.player,
 			});
 
 			target.applyKnockback({ x: 0, z: 0 }, 0);
 			target.applyImpulse({ x: 0, y: lastYVel, z: 0 });
 		} catch {}
+
+		if (damaged) {
+			s.revState.addRev(REV_GAIN_ON_HIT);
+		}
 	}
 }
