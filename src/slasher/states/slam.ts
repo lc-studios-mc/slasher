@@ -6,7 +6,7 @@ import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
-const REV_CONSUMPTION_ON_POWERFUL = 0.4;
+const REV_CONSUMPTION_ON_POWERFUL = 40;
 
 export const SlamReadyState: SlasherState = {
 	name: StateName.SlamReady,

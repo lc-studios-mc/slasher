@@ -10,7 +10,7 @@ import { StateName } from "../shared";
 
 const SLASH_DAMAGE = 6;
 const SLASH_DURATION = 0.35 * mc.TicksPerSecond;
-const REV_GAIN_ON_HIT = 0.04;
+const REV_GAIN_ON_HIT = 4;
 
 const scanConfig: AttackScanConfig = {
 	maxDistance: 8,

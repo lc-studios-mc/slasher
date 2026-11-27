@@ -1,18 +1,18 @@
 import { clamp } from "@/lib/number";
 import * as mc from "@minecraft/server";
 
-const REV_BASE_VALUE = 0.2; // starting value
-const REV_BASE_GAIN_SPEED = 0.002; // rev to gain per tick when less than base value
+const REV_MAX = 100;
+const REV_BASE = 20;
 
 export class RevState {
-	private _currentRev = REV_BASE_VALUE;
+	private _currentRev = REV_BASE;
 
 	get currentRev() {
 		return this._currentRev;
 	}
 
 	set currentRev(value) {
-		this._currentRev = clamp(value, 0, 1);
+		this._currentRev = clamp(Math.floor(value), 0, REV_MAX);
 	}
 
 	addRev(value: number): number {
@@ -21,7 +21,7 @@ export class RevState {
 	}
 
 	consumeRev(value: number): boolean {
-		if (value > this.currentRev) return false;
+		if (Math.floor(value) > this.currentRev) return false;
 		this.currentRev -= value;
 		return true;
 	}
@@ -40,12 +40,6 @@ function getOrCreateState(player: mc.Player): RevState {
 
 export function getRevState(player: mc.Player): RevState {
 	return getOrCreateState(player);
-}
-
-function onTick(_player: mc.Player, state: RevState) {
-	if (state.currentRev < REV_BASE_VALUE) {
-		state.currentRev = Math.min(REV_BASE_VALUE, state.currentRev + REV_BASE_GAIN_SPEED);
-	}
 }
 
 mc.world.afterEvents.worldLoad.subscribe(() => {
@@ -68,7 +62,7 @@ mc.world.beforeEvents.playerLeave.subscribe((ev) => {
 });
 
 mc.system.runInterval(() => {
-	for (const [player, state] of statesByPlayer) {
-		onTick(player, state);
+	for (const state of statesByPlayer.values()) {
+		if (state.currentRev < REV_BASE) state.currentRev++;
 	}
 });
