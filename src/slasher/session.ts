@@ -9,6 +9,7 @@ import { ActionName, SLASHER_TYPE_ID, StateName } from "./shared";
 import { IdleState } from "./states/idle";
 import { SlamClashState, SlamReadyState } from "./states/slam";
 import { SlashState } from "./states/slash";
+import { StabThrustState, StabWindupState } from "./states/stab";
 
 registerItemSession(SLASHER_TYPE_ID, (ctx) => new SlasherSession(ctx));
 
@@ -19,6 +20,8 @@ export class SlasherSession extends ItemSession {
 			[StateName.Slash]: SlashState,
 			[StateName.SlamReady]: SlamReadyState,
 			[StateName.SlamClash]: SlamClashState,
+			[StateName.StabWindup]: StabWindupState,
+			[StateName.StabThrust]: StabThrustState,
 		},
 		StateName.Idle,
 	);
@@ -61,6 +64,12 @@ export class SlasherSession extends ItemSession {
 			this.fsm.changeState(StateName.Slash, { s: this });
 		} else {
 			this.inputBuffer.push(ActionName.Slash);
+		}
+	}
+
+	override onStartUse(_ev: mc.ItemStartUseAfterEvent) {
+		if (this.fsm.currentState === IdleState) {
+			this.fsm.changeState(StateName.StabWindup, { s: this });
 		}
 	}
 

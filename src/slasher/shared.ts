@@ -15,6 +15,8 @@ export const StateName = {
 	Slash: "slash",
 	SlamReady: "slamReady",
 	SlamClash: "slamClash",
+	StabWindup: "stabWindup",
+	StabThrust: "stabThrust",
 } as const;
 
 export type StateContext = {
