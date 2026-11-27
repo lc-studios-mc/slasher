@@ -18,11 +18,14 @@ export const SlamReadyState: SlasherState = {
 		});
 
 		s.player.startItemCooldown("slasher_slam_ready", 2);
+		s.player.startItemCooldown("slasher_slam_fall", 2);
 
 		s.highestSlamHeight = s.player.location.y;
 	},
 
 	onTick({ s }) {
+		s.player.startItemCooldown("slasher_slam_fall", 2);
+
 		if (s.player.location.y > s.highestSlamHeight) {
 			s.highestSlamHeight = s.player.location.y;
 		}
