@@ -74,8 +74,6 @@ function performClash(s: SlasherSession) {
 		s.dimension.spawnEntity("slasher:slam_impact", s.slamLocation);
 
 		applyCameraShake(s.player, 0.14, 0.3, "rotational");
-
-		s.player.addEffect("slowness", 20, { amplifier: 1, showParticles: false });
 	} else {
 		s.dimension.playSound("slasher.slasher.slam.clash.weak", s.slamLocation, {
 			volume: 1.5,
@@ -87,9 +85,9 @@ function performClash(s: SlasherSession) {
 		});
 
 		applyCameraShake(s.player, 0.1, 0.3, "rotational");
-
-		s.player.addEffect("slowness", 12, { amplifier: 0, showParticles: false });
 	}
+
+	s.player.addEffect("slowness", 15, { amplifier: 0, showParticles: false });
 
 	const targets = s.dimension.getEntities({
 		location: s.slamLocation,
@@ -108,29 +106,30 @@ function performClash(s: SlasherSession) {
 		const dist = vec3.distance(target.location, s.player.location);
 		const isCloseOrGrounded = target.isOnGround || dist < 2.8;
 
+		if (isCloseOrGrounded) {
+			try {
+				const knockbackVec = vec3.create();
+				vec3.subtract(knockbackVec, target.location, s.player.location);
+				knockbackVec.y = 0;
+				vec3.normalize(knockbackVec, knockbackVec);
+				vec3.multiplyScalar(knockbackVec, knockbackVec, 1.1);
+				target.applyKnockback(knockbackVec, 0.3);
+			} catch {}
+		}
+
 		const baseDamage = powerful ? 8 + heightDiff * 1.3 : 4;
 		const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
 
+		let damaged = false;
+
 		try {
-			target.applyDamage(damage, {
+			damaged = target.applyDamage(damage, {
 				cause: mc.EntityDamageCause.maceSmash,
 				damagingEntity: s.player,
 			});
-		} catch {}
 
-		if (!target.isValid) continue;
-		if (!isCloseOrGrounded) continue;
-
-		const knockbackVec = vec3.create();
-		vec3.subtract(knockbackVec, target.location, s.player.location);
-		knockbackVec.y = 0;
-		vec3.normalize(knockbackVec, knockbackVec);
-		vec3.multiplyScalar(knockbackVec, knockbackVec, 1.1);
-
-		try {
-			target.applyKnockback(knockbackVec, 0.3);
-			if (!(target instanceof mc.Player)) {
-				target.addEffect("slowness", 20, { amplifier: 1 });
+			if (damaged && powerful) {
+				target.addEffect("slowness", 22, { amplifier: 1 });
 			}
 		} catch {}
 	}
