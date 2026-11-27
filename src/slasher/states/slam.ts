@@ -119,7 +119,7 @@ function performClash(s: SlasherSession) {
 			} catch {}
 		}
 
-		const baseDamage = powerful ? 8 + heightDiff * 1.3 : 4;
+		const baseDamage = powerful ? 6 + heightDiff * 1.1 : 4;
 		const damage = isCloseOrGrounded ? baseDamage : baseDamage / 1.5;
 
 		let damaged = false;
