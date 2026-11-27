@@ -41,6 +41,7 @@ export function scanForAttackTargets(attacker: mc.Player, config: AttackScanConf
 			if (!mc.world.gameRules.pvp) continue;
 			if (isCreativeOrSpectator(candidate)) continue;
 		}
+		if (candidate.hasComponent(mc.EntityComponentTypes.Projectile)) continue;
 		if (isValidTarget && !isValidTarget(candidate)) continue;
 
 		const aabb = candidate.getAABB();

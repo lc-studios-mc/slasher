@@ -103,6 +103,8 @@ function performClash(s: SlasherSession) {
 			if (isCreativeOrSpectator(target)) continue;
 		}
 
+		if (target.hasComponent(mc.EntityComponentTypes.Projectile)) continue;
+
 		const dist = vec3.distance(target.location, s.player.location);
 		const isCloseOrGrounded = target.isOnGround || dist < 2.8;
 
