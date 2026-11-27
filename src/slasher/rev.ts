@@ -8,8 +8,8 @@ const REV_REGEN_INTERVAL = 2;
 const REV_REGEN_PAUSE = 15;
 
 const REV_LOSS_MIN = 20;
-const REV_LOSS_INTERVAL = 5;
-const REV_LOSS_PAUSE = 60;
+const REV_LOSS_INTERVAL = 6;
+const REV_LOSS_PAUSE = 80;
 
 export class RevState {
 	private _currentRev = 0;
