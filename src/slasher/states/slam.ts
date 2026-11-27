@@ -20,11 +20,17 @@ export const SlamReadyState: SlasherState = {
 		s.player.startItemCooldown("slasher_slam_ready", 2);
 		s.player.startItemCooldown("slasher_slam_fall", 2);
 
+		s.player.playAnimation("animation.slasher.slasher.player.slam.ready");
+
 		s.highestSlamHeight = s.player.location.y;
 	},
 
 	onTick({ s }) {
 		s.player.startItemCooldown("slasher_slam_fall", 2);
+
+		if (s.fsm.currentTick >= 8 && s.fsm.currentTick % 4 === 0) {
+			s.player.playAnimation("animation.slasher.slasher.player.slam.fall");
+		}
 
 		if (s.player.location.y > s.highestSlamHeight) {
 			s.highestSlamHeight = s.player.location.y;
@@ -54,6 +60,8 @@ export const SlamClashState: SlasherState = {
 	onEnter({ s }) {
 		s.player.startItemCooldown("slasher_slam_clash", 2);
 		s.player.applyImpulse({ x: 0, y: -0.8, z: 0 });
+
+		s.player.playAnimation("animation.slasher.slasher.player.slam.clash");
 
 		s.slamLocation = s.player.location;
 		performClash(s);
