@@ -10,7 +10,8 @@
 						{ "idle": "q.all_animations_finished" },
 						{ "slash.1": "v.cd_slash_1" },
 						{ "slash.2": "v.cd_slash_2" },
-						{ "slam.ready": "v.cd_slam_ready" }
+						{ "slam.ready": "v.cd_slam_ready" },
+						{ "stab.windup": "v.cd_stab_windup" }
 					]
 				},
 
@@ -20,7 +21,8 @@
 						{ "pick": "v.cd_reset" },
 						{ "slash.1": "v.cd_slash_1" },
 						{ "slash.2": "v.cd_slash_2" },
-						{ "slam.ready": "v.cd_slam_ready" }
+						{ "slam.ready": "v.cd_slam_ready" },
+						{ "stab.windup": "v.cd_stab_windup" }
 					]
 				},
 
@@ -54,6 +56,24 @@
 					"animations": ["fp.slam.clash"],
 					"transitions": [{ "pick": "v.cd_reset || q.all_animations_finished" }],
 					"blend_transition": 0.15
+				},
+
+				"stab.windup": {
+					"animations": ["fp.stab.windup"],
+					"transitions": [
+						{ "pick": "v.cd_reset" },
+						{ "stab.thrust": "v.cd_stab_thrust" }
+					],
+					"blend_transition": 0.03
+				},
+
+				"stab.thrust": {
+					"animations": ["fp.stab.thrust"],
+					"transitions": [
+						{ "pick": "v.cd_reset" },
+						{ "idle": "q.all_animations_finished" }
+					],
+					"blend_transition": 0.1
 				}
 			}
 		}
