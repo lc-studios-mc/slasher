@@ -41,7 +41,7 @@ export class SlasherSession extends ItemSession {
 
 		this.fsm.tick({ s: this });
 
-		this.player.onScreenDisplay.setActionBar(`§eREV. ${this.revState.currentRev}%`);
+		this.player.onScreenDisplay.setActionBar(`§e§l${this.revState.currentRev}`);
 	}
 
 	override onSwing(ev: mc.PlayerSwingStartAfterEvent) {
