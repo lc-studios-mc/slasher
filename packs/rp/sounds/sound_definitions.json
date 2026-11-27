@@ -51,6 +51,18 @@
 					"volume": 0.86
 				}
 			]
+		},
+
+		"slasher.slasher.stab.windup": {
+			"category": "hostile",
+			"max_distance": 12.0,
+			"min_distance": null,
+			"sounds": [
+				{
+					"name": "sounds/slasher/slasher/stab_windup",
+					"volume": 0.58
+				}
+			]
 		}
 	}
 }
