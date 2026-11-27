@@ -3,6 +3,7 @@ import * as mc from "@minecraft/server";
 
 const REV_MAX = 100;
 const REV_BASE = 20;
+const REV_REGEN_INTERVAL = 3;
 
 export class RevState {
 	private _currentRev = REV_BASE;
@@ -65,4 +66,4 @@ mc.system.runInterval(() => {
 	for (const state of statesByPlayer.values()) {
 		if (state.currentRev < REV_BASE) state.currentRev++;
 	}
-});
+}, REV_REGEN_INTERVAL);
