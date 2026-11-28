@@ -32,6 +32,8 @@ export class SlasherSession extends ItemSession {
 
 	highestSlamHeight = -999;
 	slamLocation: mc.Vector3 = vec3.ZERO;
+	stabRotation: mc.Vector2 = { x: 0, y: 0 };
+	stabAlreadyScanned: mc.Entity[] = [];
 
 	override start() {
 		this.fsm.start({ s: this });

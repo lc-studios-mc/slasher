@@ -9,21 +9,23 @@ const rayDir = vec3.create();
 export type AttackScanConfig = {
 	maxDistance: number;
 	sphereOffsets: readonly mc.Vector3[];
-	sphereSize: number;
+	sphereSize?: number;
+	rotation?: mc.Vector2;
 	isValidTarget?: (entity: mc.Entity) => boolean;
 };
 
 export function scanForAttackTargets(attacker: mc.Player, config: AttackScanConfig): mc.Entity[] {
-	const { maxDistance, sphereOffsets, sphereSize = 1, isValidTarget } = config;
+	const {
+		maxDistance,
+		sphereOffsets,
+		sphereSize = 1,
+		rotation = attacker.getRotation(),
+		isValidTarget,
+	} = config;
 
 	const headLocation = attacker.getHeadLocation();
 
-	vec3.resolveLocalOffsets(
-		resolvedSphereOffsets,
-		headLocation,
-		attacker.getRotation(),
-		sphereOffsets,
-	);
+	vec3.resolveLocalOffsets(resolvedSphereOffsets, headLocation, rotation, sphereOffsets);
 
 	const candidates = attacker.dimension.getEntities({
 		location: headLocation,
