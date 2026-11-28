@@ -11,7 +11,7 @@ import { StateName } from "../shared";
 const WINDUP_DURATION = 0.45 * mc.TicksPerSecond;
 const THRUST_DURATION = 0.35 * mc.TicksPerSecond;
 const LUNGE_REV_COMSUMPTION = 20;
-const ATTACK_DAMAGE = 7;
+const ATTACK_DAMAGE = 8;
 const ATTACK_WINDOW = 0.2 * mc.TicksPerSecond;
 
 const scanSphereOffsets: mc.Vector3[] = Array.from({ length: 11 }, (_, i) => ({
