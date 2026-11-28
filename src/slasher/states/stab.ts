@@ -1,7 +1,7 @@
 import type { SlasherSession } from "../session";
 import type { SlasherState } from "../shared";
 import { calculateReducedDamage } from "@/lib/damage";
-import { getFaceFrontLocation } from "@/lib/misc";
+import { applyCameraShake, getFaceFrontLocation } from "@/lib/misc";
 import { randomFloat } from "@/lib/number";
 import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
@@ -46,6 +46,8 @@ export const StabThrustState: SlasherState = {
 		s.stabRotation = s.player.getRotation();
 
 		s.player.startItemCooldown("slasher_stab_thrust", 2);
+
+		applyCameraShake(s.player, 0.07, 0.17, "rotational");
 
 		const moveVec = s.player.inputInfo.getMovementVector();
 		const powerful =
