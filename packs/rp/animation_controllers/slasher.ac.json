@@ -71,9 +71,10 @@
 					"animations": ["fp.stab.thrust"],
 					"transitions": [
 						{ "pick": "v.cd_reset" },
-						{ "idle": "q.all_animations_finished" }
+						{ "idle": "q.all_animations_finished" },
+						{ "stab.windup": "v.cd_stab_windup" }
 					],
-					"blend_transition": 0.1
+					"blend_transition": 0.13
 				}
 			}
 		}
