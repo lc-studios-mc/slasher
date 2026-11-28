@@ -86,7 +86,7 @@ function performClash(s: SlasherSession) {
 
 		applyCameraShake(s.player, 0.14, 0.3, "rotational");
 	} else {
-		s.dimension.playSound("slasher.slasher.slam.clash.weak", s.slamLocation, {
+		s.dimension.playSound("slasher.slasher.thud", s.slamLocation, {
 			volume: 1.5,
 			pitch: randomFloat(0.95, 1.05),
 		});
