@@ -31,7 +31,6 @@ export class RevState {
 	addRev(value: number): number {
 		this.currentRev += value;
 		this._lossPauseTtl = REV_LOSS_PAUSE;
-		this._regenPauseTtl = REV_REGEN_PAUSE;
 		return this.currentRev;
 	}
 
