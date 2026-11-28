@@ -5,7 +5,7 @@ import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
-const WINDUP_DURATION = 0.5 * mc.TicksPerSecond;
+const WINDUP_DURATION = 0.35 * mc.TicksPerSecond;
 const THRUST_DURATION = 0.45 * mc.TicksPerSecond;
 
 const LUNGE_REV_COMSUMPTION = 20;
