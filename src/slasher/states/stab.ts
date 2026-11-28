@@ -5,8 +5,8 @@ import * as vec3 from "@/lib/vec3";
 import * as mc from "@minecraft/server";
 import { StateName } from "../shared";
 
-const WINDUP_DURATION = 0.35 * mc.TicksPerSecond;
-const THRUST_DURATION = 0.45 * mc.TicksPerSecond;
+const WINDUP_DURATION = 0.4 * mc.TicksPerSecond;
+const THRUST_DURATION = 0.4 * mc.TicksPerSecond;
 
 const LUNGE_REV_COMSUMPTION = 20;
 
@@ -34,10 +34,11 @@ export const StabThrustState: SlasherState = {
 		s.player.startItemCooldown("slasher_stab_thrust", 2);
 
 		const moveVec = s.player.inputInfo.getMovementVector();
-		const powerful = moveVec.y > 0.4 && s.revState.consumeRev(LUNGE_REV_COMSUMPTION);
+		const powerful =
+			!s.player.isOnGround && moveVec.y > 0.4 && s.revState.consumeRev(LUNGE_REV_COMSUMPTION);
 
 		s.dimension.playSound("slasher.slasher.slash", getFaceFrontLocation(s.player), {
-			pitch: powerful ? 0.9 : randomFloat(1.0, 1.1),
+			pitch: randomFloat(0.88, 0.98),
 			volume: 1.5,
 		});
 
