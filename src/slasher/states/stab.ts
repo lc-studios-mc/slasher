@@ -8,11 +8,11 @@ import * as mc from "@minecraft/server";
 import { scanForAttackTargets } from "../scan";
 import { StateName } from "../shared";
 
-const WINDUP_DURATION = 0.4 * mc.TicksPerSecond;
-const THRUST_DURATION = 0.4 * mc.TicksPerSecond;
+const WINDUP_DURATION = 0.45 * mc.TicksPerSecond;
+const THRUST_DURATION = 0.35 * mc.TicksPerSecond;
 const LUNGE_REV_COMSUMPTION = 20;
 const ATTACK_DAMAGE = 7;
-const ATTACK_WINDOW = 0.25 * mc.TicksPerSecond;
+const ATTACK_WINDOW = 0.2 * mc.TicksPerSecond;
 
 const scanSphereOffsets: mc.Vector3[] = Array.from({ length: 11 }, (_, i) => ({
 	x: 0,
@@ -58,7 +58,7 @@ export const StabThrustState: SlasherState = {
 
 		const viewDir = s.player.getViewDirection();
 		const force = vec3.create();
-		force.z = powerful ? 1.49 : 0.4;
+		force.z = powerful ? 1.44 : 0.4;
 		force.y = 0.05;
 		vec3.setDirection(force, force, viewDir);
 
